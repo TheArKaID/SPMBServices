@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.ServiceModel;
@@ -12,22 +14,62 @@ namespace SPMBServices
     // NOTE: In order to launch WCF Test Client for testing this service, please select Service1.svc or Service1.svc.cs at the Solution Explorer and start debugging.
     public class Service1 : IService1
     {
-        public string GetData(int value)
+        string con = "Data Source=DESKTOP-3FECEAK;Initial Catalog=SPMB;User ID=sa;Password=ArKa1234";
+        string query = "";
+        SqlConnection koneksi = new SqlConnection();
+        SqlCommand cmd;
+        SqlDataAdapter sda;
+        SqlDataReader reader;
+        DataTable dataTable;
+        
+        public void Daftar(string username, string password, string email, string nohp)
         {
-            return string.Format("You entered: {0}", value);
+            string noPendaftaran = getNoPendaftaran();
+            koneksi.ConnectionString = con;
+            query = "INSERT INTO Pendaftar([no_pendaftaran], [username], [password], [email], [nohp]) VALUES(@noPendaftaran, @username, @password, @email, @nohp)";
+            cmd = new SqlCommand(query, koneksi);
+            cmd.Parameters.AddWithValue("@noPendaftaran", noPendaftaran);
+            cmd.Parameters.AddWithValue("@username", username);
+            cmd.Parameters.AddWithValue("@password", password);
+            cmd.Parameters.AddWithValue("@email", email);
+            cmd.Parameters.AddWithValue("@nohp", nohp);
+
+            koneksi.Open();
+            cmd.ExecuteNonQuery();
+            koneksi.Close();
         }
 
-        public CompositeType GetDataUsingDataContract(CompositeType composite)
+        string getNoPendaftaran()
         {
-            if (composite == null)
+            string noPendaftaran, current, editable;
+            noPendaftaran = "";
+            int noPos = 0;
+            koneksi.ConnectionString = con;
+            query = "SELECT no_pendaftaran FROM Pendaftar ORDER BY no_pendaftaran DESC";
+            cmd = new SqlCommand(query, koneksi);
+
+            koneksi.Open();
+            reader = cmd.ExecuteReader();
+
+            if (reader.Read())
             {
-                throw new ArgumentNullException("composite");
+                current = reader.GetString(0);
+                editable = current.Substring(9, 5);
+                noPos = Int32.Parse(editable);
+                noPos++;
+                if (noPos > 9999)
+                    noPendaftaran = "SPMB2019-" + noPos;
+                else if (noPos > 999)
+                    noPendaftaran = "SPMB2019-0" + noPos;
+                else if (noPos > 99)
+                    noPendaftaran = "SPMB2019-00" + noPos;
+                else if (noPos > 9)
+                    noPendaftaran = "SPMB2019-000" + noPos;
+                else if (noPos < 10)
+                    noPendaftaran = "SPMB2019-0000" + noPos;
             }
-            if (composite.BoolValue)
-            {
-                composite.StringValue += "Suffix";
-            }
-            return composite;
+            koneksi.Close();
+            return noPendaftaran;
         }
     }
 }
