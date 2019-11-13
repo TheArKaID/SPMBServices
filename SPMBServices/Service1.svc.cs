@@ -88,6 +88,23 @@ namespace SPMBServices
 
         private string cekDaftar(string username, string password, string email, string nohp)
         {
+            string noPendaftaran, current, editable;
+            noPendaftaran = "";
+            int noPos = 0;
+            koneksi.ConnectionString = con;
+            query = "SELECT username FROM Pendaftar WHERE username = @username";
+            cmd = new SqlCommand(query, koneksi);
+            cmd.Parameters.AddWithValue("@username", username);
+
+            koneksi.Open();
+            reader = cmd.ExecuteReader();
+            if (reader.HasRows)
+            {
+                koneksi.Close();
+                return "Username telah digunakan";
+            }
+            koneksi.Close();
+
             string status = "";
             if (username.Length < 6)
                 status = "Username minimal 6 huruf";
