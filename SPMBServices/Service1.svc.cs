@@ -27,7 +27,7 @@ namespace SPMBServices
             string status = "";
             status = cekDaftar(username, password, email, nohp);
 
-            if (status != "true")
+            if (status != "berhasil")
             {
                 return status;
             }
@@ -115,7 +115,7 @@ namespace SPMBServices
             else if (string.IsNullOrEmpty(nohp) || string.IsNullOrWhiteSpace(nohp) || nohp.Any(x => char.IsLetter(x)))
                 status = "No Hp harus diisi";
             else
-                status = "true";
+                status = "berhasil";
             return status;
         }
     }
