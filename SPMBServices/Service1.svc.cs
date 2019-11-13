@@ -22,8 +22,16 @@ namespace SPMBServices
         SqlDataReader reader;
         DataTable dataTable;
         
-        public void Daftar(string username, string password, string email, string nohp)
+        public string Daftar(string username, string password, string email, string nohp)
         {
+            string status = "";
+            status = cekDaftar(username, password, email, nohp);
+
+            if (status != "true")
+            {
+                return status;
+            }
+
             string noPendaftaran = getNoPendaftaran();
             koneksi.ConnectionString = con;
             query = "INSERT INTO Pendaftar([no_pendaftaran], [username], [password], [email], [nohp]) VALUES(@noPendaftaran, @username, @password, @email, @nohp)";
@@ -37,6 +45,8 @@ namespace SPMBServices
             koneksi.Open();
             cmd.ExecuteNonQuery();
             koneksi.Close();
+
+            return status;
         }
 
         string getNoPendaftaran()
@@ -68,8 +78,28 @@ namespace SPMBServices
                 else if (noPos < 10)
                     noPendaftaran = "SPMB2019-0000" + noPos;
             }
+            else
+            {
+                noPendaftaran = "SPMB2019-00001";
+            }
             koneksi.Close();
             return noPendaftaran;
+        }
+
+        private string cekDaftar(string username, string password, string email, string nohp)
+        {
+            string status = "";
+            if (username.Length < 6)
+                status = "Username minimal 6 huruf";
+            else if (password.Length < 8)
+                status = "Password minimal 8 huruf";
+            else if (string.IsNullOrEmpty(email) || string.IsNullOrWhiteSpace(email) || !email.Contains("@"))
+                status = "Email harus di isi";
+            else if (string.IsNullOrEmpty(nohp) || string.IsNullOrWhiteSpace(nohp) || nohp.Any(x => char.IsLetter(x)))
+                status = "No Hp harus diisi";
+            else
+                status = "true";
+            return status;
         }
     }
 }

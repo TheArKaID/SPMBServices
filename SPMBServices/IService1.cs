@@ -20,7 +20,7 @@ namespace SPMBServices
             ResponseFormat = WebMessageFormat.Json,
             UriTemplate = "daftar?username={username}&password={password}&email={email}&nohp={nohp}"
         )]
-        void Daftar(string username, string password, string email, string nohp);
+        string Daftar(string username, string password, string email, string nohp);
     }
 
 }
