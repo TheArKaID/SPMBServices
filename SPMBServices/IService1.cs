@@ -21,6 +21,61 @@ namespace SPMBServices
             UriTemplate = "daftar?username={username}&password={password}&email={email}&nohp={nohp}"
         )]
         string Daftar(string username, string password, string email, string nohp);
+
+        [OperationContract]
+        [WebInvoke(
+            Method = "POST",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "updatePendaftar?jsonData={jsonData}"
+        )]
+        string UpdatePendaftar(string jsonData);
+
+    }
+
+    [DataContract]
+    public class Pendaftar
+    {
+        string noPendaftaran, nama, nisn, asalSekolah, jenisKelamin, alamat, tempatLahir, namaOrangTua, pekerjaanOrangTua;
+        int idNilaiAsal, idNilaiUjian, idVerificator, idStatus, idTahunDaftar, jurusan1, jurusan2;
+        DateTime tanggalLahir, waktuTest;
+
+        [DataMember]
+        public string NoPendaftaran { get => noPendaftaran; set => noPendaftaran = value; }
+        [DataMember]
+        public string Nama { get => nama; set => nama = value; }
+        [DataMember]
+        public string Nisn { get => nisn; set => nisn = value; }
+        [DataMember]
+        public string AsalSekolah { get => asalSekolah; set => asalSekolah = value; }
+        [DataMember]
+        public string JenisKelamin { get => jenisKelamin; set => jenisKelamin = value; }
+        [DataMember]
+        public string Alamat { get => alamat; set => alamat = value; }
+        [DataMember]
+        public string TempatLahir { get => tempatLahir; set => tempatLahir = value; }
+        [DataMember]
+        public string NamaOrangTua { get => namaOrangTua; set => namaOrangTua = value; }
+        [DataMember]
+        public string PekerjaanOrangTua { get => pekerjaanOrangTua; set => pekerjaanOrangTua = value; }
+        [DataMember]
+        public int IdNilaiAsal { get => idNilaiAsal; set => idNilaiAsal = value; }
+        [DataMember]
+        public int IdNilaiUjian { get => idNilaiUjian; set => idNilaiUjian = value; }
+        [DataMember]
+        public int IdVerificator { get => idVerificator; set => idVerificator = value; }
+        [DataMember]
+        public int IdStatus { get => idStatus; set => idStatus = value; }
+        [DataMember]
+        public int IdTahunDaftar { get => idTahunDaftar; set => idTahunDaftar = value; }
+        [DataMember]
+        public int Jurusan1 { get => jurusan1; set => jurusan1 = value; }
+        [DataMember]
+        public int Jurusan2 { get => jurusan2; set => jurusan2 = value; }
+        [DataMember]
+        public DateTime TanggalLahir { get => tanggalLahir; set => tanggalLahir = value; }
+        [DataMember]
+        public DateTime WaktuTest { get => waktuTest; set => waktuTest = value; }
     }
 
 }

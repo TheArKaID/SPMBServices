@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -43,7 +44,13 @@ namespace SPMBServices
             cmd.Parameters.AddWithValue("@nohp", nohp);
 
             koneksi.Open();
-            cmd.ExecuteNonQuery();
+            try
+            {
+                cmd.ExecuteNonQuery();
+            } catch (Exception e)
+            {
+                status = "Error - " + e.Message + " Please Contact the Administrator";
+            }
             koneksi.Close();
 
             return status;
@@ -88,9 +95,6 @@ namespace SPMBServices
 
         private string cekDaftar(string username, string password, string email, string nohp)
         {
-            string noPendaftaran, current, editable;
-            noPendaftaran = "";
-            int noPos = 0;
             koneksi.ConnectionString = con;
             query = "SELECT username FROM Pendaftar WHERE username = @username";
             cmd = new SqlCommand(query, koneksi);
@@ -116,6 +120,67 @@ namespace SPMBServices
                 status = "No Hp harus diisi";
             else
                 status = "berhasil";
+            return status;
+        }
+
+        public string UpdatePendaftar(string jsonData)
+        {
+            string status = "";
+            Pendaftar pendaftar = new Pendaftar();
+            pendaftar = JsonConvert.DeserializeObject<Pendaftar>(jsonData);
+            pendaftar.WaktuTest = Convert.ToDateTime(pendaftar.WaktuTest.ToString("dd/MM/yyyy"));
+            pendaftar.TanggalLahir = Convert.ToDateTime(pendaftar.TanggalLahir.ToString("dd/MM/yyyy"));
+            koneksi.ConnectionString = con;
+            query = "UPDATE Pendaftar SET " +
+                "[nisn] = @nisn," +
+                "[nama] = @nama," +
+                "[asal_sekolah] = @asalSekolah," +
+                "[jenis_kelamin] = @jenisKelamin," +
+                "[alamat] = @alamat," +
+                "[tempat_lahir] = @tempatLahir," +
+                "[tanggal_lahir] = @tanggalLahir," +
+                "[waktu_test] = @waktuTest," +
+                "[jurusan1] = @jurusan1," +
+                "[jurusan2] = @jurusan2," +
+                "[nama_orang_tua] = @namaOrangTua," +
+                "[pekerjaan_orang_tua] = @pekerjaanOrangTua," +
+                "[id_nilai_asal] = @idNilaiAsal," +
+                "[id_nilai_ujian] = @idNilaiUjian," +
+                "[id_verificator] = @idVerificator," +
+                "[id_status] = @idStatus," +
+                "[id_tahun_daftar] = @idTahunDaftar " +
+                "WHERE no_pendaftaran = @noPendaftaran";
+            cmd = new SqlCommand(query, koneksi);
+            cmd.Parameters.AddWithValue("@noPendaftaran", pendaftar.NoPendaftaran);
+            cmd.Parameters.AddWithValue("@nisn", pendaftar.Nisn);
+            cmd.Parameters.AddWithValue("@nama", pendaftar.Nama);
+            cmd.Parameters.AddWithValue("@asalSekolah", pendaftar.AsalSekolah);
+            cmd.Parameters.AddWithValue("@jenisKelamin", pendaftar.JenisKelamin);
+            cmd.Parameters.AddWithValue("@alamat", pendaftar.Alamat);
+            cmd.Parameters.AddWithValue("@tempatLahir", pendaftar.TempatLahir);
+            cmd.Parameters.AddWithValue("@tanggalLahir", pendaftar.TanggalLahir);
+            cmd.Parameters.AddWithValue("@waktuTest", pendaftar.WaktuTest);
+            cmd.Parameters.AddWithValue("@jurusan1", pendaftar.Jurusan1);
+            cmd.Parameters.AddWithValue("@jurusan2", pendaftar.Jurusan2);
+            cmd.Parameters.AddWithValue("@namaOrangTua", pendaftar.NamaOrangTua);
+            cmd.Parameters.AddWithValue("@pekerjaanOrangTua", pendaftar.PekerjaanOrangTua);
+            cmd.Parameters.AddWithValue("@idNilaiAsal", pendaftar.IdNilaiAsal);
+            cmd.Parameters.AddWithValue("@idNilaiUjian", pendaftar.IdNilaiUjian);
+            cmd.Parameters.AddWithValue("@idVerificator", pendaftar.IdVerificator);
+            cmd.Parameters.AddWithValue("@idStatus", pendaftar.IdStatus);
+            cmd.Parameters.AddWithValue("@idTahunDaftar", pendaftar.IdTahunDaftar);
+
+
+            koneksi.Open();
+            try
+            {
+                cmd.ExecuteNonQuery();
+            } catch(Exception e)
+            {
+                status = "Error - " + e.Message + " Please Contact the Administrator.";
+            }
+            koneksi.Close();
+
             return status;
         }
     }
