@@ -33,7 +33,7 @@ namespace SPMBServices
 
         [OperationContract]
         [WebInvoke(
-            Method = "POST",
+            Method = "GET",
             RequestFormat = WebMessageFormat.Json,
             ResponseFormat = WebMessageFormat.Json,
             UriTemplate = "loginPendaftar?username={username}&password={password}"

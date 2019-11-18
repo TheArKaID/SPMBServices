@@ -139,16 +139,10 @@ namespace SPMBServices
                 "[alamat] = @alamat," +
                 "[tempat_lahir] = @tempatLahir," +
                 "[tanggal_lahir] = @tanggalLahir," +
-                "[waktu_test] = @waktuTest," +
                 "[jurusan1] = @jurusan1," +
                 "[jurusan2] = @jurusan2," +
                 "[nama_orang_tua] = @namaOrangTua," +
-                "[pekerjaan_orang_tua] = @pekerjaanOrangTua," +
-                "[id_nilai_asal] = @idNilaiAsal," +
-                "[id_nilai_ujian] = @idNilaiUjian," +
-                "[id_verificator] = @idVerificator," +
-                "[id_status] = @idStatus," +
-                "[id_tahun_daftar] = @idTahunDaftar " +
+                "[pekerjaan_orang_tua] = @pekerjaanOrangTua " +
                 "WHERE no_pendaftaran = @noPendaftaran";
             cmd = new SqlCommand(query, koneksi);
             cmd.Parameters.AddWithValue("@noPendaftaran", pendaftar.NoPendaftaran);
@@ -159,22 +153,17 @@ namespace SPMBServices
             cmd.Parameters.AddWithValue("@alamat", pendaftar.Alamat);
             cmd.Parameters.AddWithValue("@tempatLahir", pendaftar.TempatLahir);
             cmd.Parameters.AddWithValue("@tanggalLahir", pendaftar.TanggalLahir);
-            cmd.Parameters.AddWithValue("@waktuTest", pendaftar.WaktuTest);
             cmd.Parameters.AddWithValue("@jurusan1", pendaftar.Jurusan1);
             cmd.Parameters.AddWithValue("@jurusan2", pendaftar.Jurusan2);
             cmd.Parameters.AddWithValue("@namaOrangTua", pendaftar.NamaOrangTua);
             cmd.Parameters.AddWithValue("@pekerjaanOrangTua", pendaftar.PekerjaanOrangTua);
-            cmd.Parameters.AddWithValue("@idNilaiAsal", pendaftar.IdNilaiAsal);
-            cmd.Parameters.AddWithValue("@idNilaiUjian", pendaftar.IdNilaiUjian);
-            cmd.Parameters.AddWithValue("@idVerificator", pendaftar.IdVerificator);
-            cmd.Parameters.AddWithValue("@idStatus", pendaftar.IdStatus);
-            cmd.Parameters.AddWithValue("@idTahunDaftar", pendaftar.IdTahunDaftar);
 
 
             koneksi.Open();
             try
             {
                 cmd.ExecuteNonQuery();
+                status = "berhasil";
             } catch(Exception e)
             {
                 status = "Error - " + e.Message + " Please Contact the Administrator.";
