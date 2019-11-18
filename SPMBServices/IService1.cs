@@ -31,6 +31,14 @@ namespace SPMBServices
         )]
         string UpdatePendaftar(string jsonData);
 
+        [OperationContract]
+        [WebInvoke(
+            Method = "POST",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "loginPendaftar?username={username}&password={password}"
+)]
+        LoginPendaftar LoginPendaftar(string username, string password);
     }
 
     [DataContract]
@@ -78,4 +86,22 @@ namespace SPMBServices
         public DateTime WaktuTest { get => waktuTest; set => waktuTest = value; }
     }
 
+    [DataContract]
+    public class LoginPendaftar
+    {
+        private string nama;
+        private string username;
+        private string noPendaftaran;
+        private string status;
+
+        [DataMember]
+        public string Username { get => username; set => username = value; }
+        [DataMember]
+        public string NoPendaftaran { get => noPendaftaran; set => noPendaftaran = value; }
+        [DataMember]
+        public string Nama { get => nama; set => nama = value; }
+        [DataMember]
+        public string Status { get => status; set => status = value; }
+    }
 }
+

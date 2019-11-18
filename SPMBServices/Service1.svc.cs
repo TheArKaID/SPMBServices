@@ -183,5 +183,57 @@ namespace SPMBServices
 
             return status;
         }
+
+        public LoginPendaftar LoginPendaftar(string username, string password)
+        {
+            LoginPendaftar user = new LoginPendaftar();
+            string status = cekLoginPendaftar(username, password);
+
+            if (!status.Equals("berhasil"))
+            {
+                user.Status = status;
+                return user;
+            }
+
+            koneksi.ConnectionString = con;
+            query = "SELECT no_pendaftaran, username, nama FROM Pendaftar WHERE username = @username AND password = @password";
+            cmd = new SqlCommand(query, koneksi);
+            cmd.Parameters.AddWithValue("@username", username);
+            cmd.Parameters.AddWithValue("@password", password);
+
+            koneksi.Open();
+            reader = cmd.ExecuteReader();
+            if (reader.HasRows)
+            {
+                reader.Read();
+                user.Status = status;
+                user.NoPendaftaran = reader.GetString(0);
+                user.Username = reader.GetString(1);
+                user.Nama = reader.GetString(2);
+                koneksi.Close();
+                return user;
+            }
+            else
+            {
+                koneksi.Close();
+                user.Status = "Username atau Password Salah.";
+                return user;
+            }
+        }
+
+        private string cekLoginPendaftar(string username, string password)
+        {
+            if (string.IsNullOrEmpty(username) || string.IsNullOrWhiteSpace(username))
+            {
+                return "Username tidak boleh kosong";
+            }
+            else if(string.IsNullOrEmpty(password) || string.IsNullOrWhiteSpace(password))
+            {
+                return "Password tidak boleh kosong";
+            }
+
+            return "berhasil";
+            
+        }
     }
 }
