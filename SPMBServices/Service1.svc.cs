@@ -224,5 +224,25 @@ namespace SPMBServices
             return "berhasil";
             
         }
+
+        public WaktuPendaftaran CekWaktuPendaftaran()
+        {
+            WaktuPendaftaran waktuPendaftaran = new WaktuPendaftaran();
+            koneksi.ConnectionString = con;
+            query = "SELECT waktupendaftaranmulai, waktupendaftaranselesai FROM config";
+            cmd = new SqlCommand(query, koneksi);
+
+            koneksi.Open();
+            reader = cmd.ExecuteReader();
+            if (reader.HasRows)
+            {
+                reader.Read();
+                waktuPendaftaran.Mulai = reader["waktupendaftaranmulai"].ToString().Substring(0, 10);
+                waktuPendaftaran.Selesai = reader["waktupendaftaranselesai"].ToString().Substring(0, 10);
+            }
+
+            koneksi.Close();
+            return waktuPendaftaran;
+        }
     }
 }

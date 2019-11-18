@@ -37,8 +37,17 @@ namespace SPMBServices
             RequestFormat = WebMessageFormat.Json,
             ResponseFormat = WebMessageFormat.Json,
             UriTemplate = "loginPendaftar?username={username}&password={password}"
-)]
+        )]
         LoginPendaftar LoginPendaftar(string username, string password);
+
+        [OperationContract]
+        [WebInvoke(
+            Method = "GET",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "waktuPendaftaran"
+        )]
+        WaktuPendaftaran CekWaktuPendaftaran();
     }
 
     [DataContract]
@@ -102,6 +111,18 @@ namespace SPMBServices
         public string Nama { get => nama; set => nama = value; }
         [DataMember]
         public string Status { get => status; set => status = value; }
+    }
+
+    [DataContract]
+    public class WaktuPendaftaran
+    {
+        private string selesai;
+        private string mulai;
+
+        [DataMember]
+        public string Mulai { get => mulai; set => mulai = value; }
+        [DataMember]
+        public string Selesai { get => selesai; set => selesai = value; }
     }
 }
 
