@@ -23,11 +23,11 @@ namespace SPMBServices
         SqlDataReader reader;
         DataTable dataTable;
         
-        public DaftarPendaftar Daftar(string username, string password, string email, string nohp)
+        public DaftarPendaftar Daftar(string username, string password, string repassword, string email, string nohp, string agreement)
         {
             DaftarPendaftar daftarPendaftar = new DaftarPendaftar();
             string status = "";
-            status = cekDaftar(username, password, email, nohp);
+            status = cekDaftar(username, password, repassword, email, nohp, agreement);
 
             if (status != "berhasil")
             {
@@ -101,8 +101,9 @@ namespace SPMBServices
             return noPendaftaran;
         }
 
-        private string cekDaftar(string username, string password, string email, string nohp)
+        private string cekDaftar(string username, string password, string repassword, string email, string nohp, string agreement)
         {
+            string status = "";
             koneksi.ConnectionString = con;
             query = "SELECT username FROM Pendaftar WHERE username = @username";
             cmd = new SqlCommand(query, koneksi);
@@ -113,21 +114,25 @@ namespace SPMBServices
             if (reader.HasRows)
             {
                 koneksi.Close();
-                return "Username telah digunakan";
+                status = " |Username telah digunakan| ";
             }
             koneksi.Close();
 
-            string status = "";
             if (username.Length < 6)
-                status = "Username minimal 6 huruf";
-            else if (password.Length < 8)
-                status = "Password minimal 8 huruf";
-            else if (string.IsNullOrEmpty(email) || string.IsNullOrWhiteSpace(email) || !email.Contains("@"))
-                status = "Email harus di isi";
-            else if (string.IsNullOrEmpty(nohp) || string.IsNullOrWhiteSpace(nohp) || nohp.Any(x => char.IsLetter(x)))
-                status = "No Hp harus diisi";
-            else
+                status += " |Username minimal 6 huruf| ";
+            if (password.Length < 8)
+                status += " |Password minimal 8 huruf| ";
+            if (!password.Equals(repassword))
+                status += " |Password yang anda masukkan tidak sama| ";
+            if (string.IsNullOrEmpty(email) || string.IsNullOrWhiteSpace(email) || !email.Contains("@"))
+                status += " |Email harus di isi| ";
+            if (string.IsNullOrEmpty(nohp) || string.IsNullOrWhiteSpace(nohp) || nohp.Any(x => char.IsLetter(x)))
+                status += " |No Hp harus diisi angka| ";
+            if (!agreement.Equals("setuju"))
+                status += " |Anda Harus menyetuji persetujuan yang ada| ";
+            if(status=="")
                 status = "berhasil";
+
             return status;
         }
 

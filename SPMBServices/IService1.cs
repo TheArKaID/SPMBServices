@@ -18,9 +18,9 @@ namespace SPMBServices
             Method = "POST",
             RequestFormat = WebMessageFormat.Json,
             ResponseFormat = WebMessageFormat.Json,
-            UriTemplate = "daftar?username={username}&password={password}&email={email}&nohp={nohp}"
+            UriTemplate = "daftar?username={username}&password={password}&repassword={repassword}&email={email}&nohp={nohp}&agreement={agreement}"
         )]
-        DaftarPendaftar Daftar(string username, string password, string email, string nohp);
+        DaftarPendaftar Daftar(string username, string password, string repassword, string email, string nohp, string agreement);
 
         [OperationContract]
         [WebInvoke(
