@@ -23,14 +23,16 @@ namespace SPMBServices
         SqlDataReader reader;
         DataTable dataTable;
         
-        public string Daftar(string username, string password, string email, string nohp)
+        public DaftarPendaftar Daftar(string username, string password, string email, string nohp)
         {
+            DaftarPendaftar daftarPendaftar = new DaftarPendaftar();
             string status = "";
             status = cekDaftar(username, password, email, nohp);
 
             if (status != "berhasil")
             {
-                return status;
+                daftarPendaftar.Status = status;
+                return daftarPendaftar;
             }
 
             string noPendaftaran = getNoPendaftaran();
@@ -44,16 +46,22 @@ namespace SPMBServices
             cmd.Parameters.AddWithValue("@nohp", nohp);
 
             koneksi.Open();
+
             try
             {
                 cmd.ExecuteNonQuery();
-            } catch (Exception e)
+                daftarPendaftar.NoPendaftaran = noPendaftaran;
+                daftarPendaftar.Username = username;
+                daftarPendaftar.Status = "berhasil";
+                daftarPendaftar.Nama = "-";
+            }
+            catch (Exception e)
             {
                 status = "Error - " + e.Message + " Please Contact the Administrator";
             }
             koneksi.Close();
 
-            return status;
+            return daftarPendaftar;
         }
 
         string getNoPendaftaran()
@@ -198,7 +206,7 @@ namespace SPMBServices
                 user.Status = status;
                 user.NoPendaftaran = reader.GetString(0);
                 user.Username = reader.GetString(1);
-                user.Nama = reader.GetString(2);
+                user.Nama = reader.IsDBNull(2) ? "-" : reader.GetString(2);
                 koneksi.Close();
                 return user;
             }

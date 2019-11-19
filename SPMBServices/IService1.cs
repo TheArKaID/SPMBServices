@@ -20,7 +20,7 @@ namespace SPMBServices
             ResponseFormat = WebMessageFormat.Json,
             UriTemplate = "daftar?username={username}&password={password}&email={email}&nohp={nohp}"
         )]
-        string Daftar(string username, string password, string email, string nohp);
+        DaftarPendaftar Daftar(string username, string password, string email, string nohp);
 
         [OperationContract]
         [WebInvoke(
@@ -123,6 +123,21 @@ namespace SPMBServices
         public string Mulai { get => mulai; set => mulai = value; }
         [DataMember]
         public string Selesai { get => selesai; set => selesai = value; }
+    }
+
+    [DataContract]
+    public class DaftarPendaftar
+    {
+        private string username, nama, noPendaftaran, status;
+
+        [DataMember]
+        public string Username { get => username; set => username = value; }
+        [DataMember]
+        public string Nama { get => nama; set => nama = value; }
+        [DataMember]
+        public string NoPendaftaran { get => noPendaftaran; set => noPendaftaran = value; }
+        [DataMember]
+        public string Status { get => status; set => status = value; }
     }
 }
 
