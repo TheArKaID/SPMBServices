@@ -36,6 +36,15 @@ namespace SPMBServices
             Method = "GET",
             RequestFormat = WebMessageFormat.Json,
             ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "cekDataPendaftar?noPendaftaran={noPendaftaran}"
+        )]
+        Pendaftar CekDataPendaftar(string noPendaftaran);
+
+        [OperationContract]
+        [WebInvoke(
+            Method = "GET",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
             UriTemplate = "loginPendaftar?username={username}&password={password}"
         )]
         LoginPendaftar LoginPendaftar(string username, string password);
@@ -53,16 +62,20 @@ namespace SPMBServices
     [DataContract]
     public class Pendaftar
     {
-        string noPendaftaran, nama, nisn, asalSekolah, jenisKelamin, alamat, tempatLahir, namaOrangTua, pekerjaanOrangTua;
-        int idNilaiAsal, idNilaiUjian, idVerificator, idStatus, idTahunDaftar, jurusan1, jurusan2;
-        DateTime tanggalLahir, waktuTest;
-
+        string noPendaftaran, nama, email, nohp, nisn, asalSekolah, jenisKelamin, alamat, tempatLahir, namaOrangTua, pekerjaanOrangTua, status;
+        int idVerificator, idStatus, idTahunDaftar, jurusan1, jurusan2;
+        string tanggalLahir, waktuTest;
+        
         [DataMember]
         public string NoPendaftaran { get => noPendaftaran; set => noPendaftaran = value; }
         [DataMember]
         public string Nama { get => nama; set => nama = value; }
         [DataMember]
+        public string NoHP { get => nohp; set => nohp = value; }
+        [DataMember]
         public string Nisn { get => nisn; set => nisn = value; }
+        [DataMember]
+        public string Email { get => email; set => email = value; }
         [DataMember]
         public string AsalSekolah { get => asalSekolah; set => asalSekolah = value; }
         [DataMember]
@@ -76,10 +89,6 @@ namespace SPMBServices
         [DataMember]
         public string PekerjaanOrangTua { get => pekerjaanOrangTua; set => pekerjaanOrangTua = value; }
         [DataMember]
-        public int IdNilaiAsal { get => idNilaiAsal; set => idNilaiAsal = value; }
-        [DataMember]
-        public int IdNilaiUjian { get => idNilaiUjian; set => idNilaiUjian = value; }
-        [DataMember]
         public int IdVerificator { get => idVerificator; set => idVerificator = value; }
         [DataMember]
         public int IdStatus { get => idStatus; set => idStatus = value; }
@@ -90,9 +99,11 @@ namespace SPMBServices
         [DataMember]
         public int Jurusan2 { get => jurusan2; set => jurusan2 = value; }
         [DataMember]
-        public DateTime TanggalLahir { get => tanggalLahir; set => tanggalLahir = value; }
+        public string Status { get => status; set => status = value; }
         [DataMember]
-        public DateTime WaktuTest { get => waktuTest; set => waktuTest = value; }
+        public string TanggalLahir { get => tanggalLahir; set => tanggalLahir = value; }
+        [DataMember]
+        public string WaktuTest { get => waktuTest; set => waktuTest = value; }
     }
 
     [DataContract]
