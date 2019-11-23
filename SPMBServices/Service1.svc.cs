@@ -143,29 +143,25 @@ namespace SPMBServices
             pendaftar = JsonConvert.DeserializeObject<Pendaftar>(jsonData);
             koneksi.ConnectionString = con;
             query = "UPDATE Pendaftar SET " +
-                "[nisn] = @nisn," +
                 "[nama] = @nama," +
+                "[email] = @email," +
                 "[asal_sekolah] = @asalSekolah," +
                 "[jenis_kelamin] = @jenisKelamin," +
                 "[alamat] = @alamat," +
                 "[tempat_lahir] = @tempatLahir," +
                 "[tanggal_lahir] = @tanggalLahir," +
-                "[jurusan1] = @jurusan1," +
-                "[jurusan2] = @jurusan2," +
                 "[nama_orang_tua] = @namaOrangTua," +
                 "[pekerjaan_orang_tua] = @pekerjaanOrangTua " +
                 "WHERE no_pendaftaran = @noPendaftaran";
             cmd = new SqlCommand(query, koneksi);
             cmd.Parameters.AddWithValue("@noPendaftaran", pendaftar.NoPendaftaran);
-            cmd.Parameters.AddWithValue("@nisn", pendaftar.Nisn);
             cmd.Parameters.AddWithValue("@nama", pendaftar.Nama);
+            cmd.Parameters.AddWithValue("@email", pendaftar.Email);
             cmd.Parameters.AddWithValue("@asalSekolah", pendaftar.AsalSekolah);
             cmd.Parameters.AddWithValue("@jenisKelamin", pendaftar.JenisKelamin);
             cmd.Parameters.AddWithValue("@alamat", pendaftar.Alamat);
             cmd.Parameters.AddWithValue("@tempatLahir", pendaftar.TempatLahir);
             cmd.Parameters.AddWithValue("@tanggalLahir", pendaftar.TanggalLahir);
-            cmd.Parameters.AddWithValue("@jurusan1", pendaftar.Jurusan1);
-            cmd.Parameters.AddWithValue("@jurusan2", pendaftar.Jurusan2);
             cmd.Parameters.AddWithValue("@namaOrangTua", pendaftar.NamaOrangTua);
             cmd.Parameters.AddWithValue("@pekerjaanOrangTua", pendaftar.PekerjaanOrangTua);
 
