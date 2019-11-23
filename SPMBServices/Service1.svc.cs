@@ -19,9 +19,7 @@ namespace SPMBServices
         string query = "";
         SqlConnection koneksi = new SqlConnection();
         SqlCommand cmd;
-        SqlDataAdapter sda;
         SqlDataReader reader;
-        DataTable dataTable;
         
         public DaftarPendaftar Daftar(string username, string password, string repassword, string email, string nohp, string agreement)
         {
@@ -145,6 +143,7 @@ namespace SPMBServices
             query = "UPDATE Pendaftar SET " +
                 "[nama] = @nama," +
                 "[email] = @email," +
+                "[nisn] = @nisn," +
                 "[asal_sekolah] = @asalSekolah," +
                 "[jenis_kelamin] = @jenisKelamin," +
                 "[alamat] = @alamat," +
@@ -156,6 +155,7 @@ namespace SPMBServices
             cmd = new SqlCommand(query, koneksi);
             cmd.Parameters.AddWithValue("@noPendaftaran", pendaftar.NoPendaftaran);
             cmd.Parameters.AddWithValue("@nama", pendaftar.Nama);
+            cmd.Parameters.AddWithValue("@nisn", pendaftar.Nisn);
             cmd.Parameters.AddWithValue("@email", pendaftar.Email);
             cmd.Parameters.AddWithValue("@asalSekolah", pendaftar.AsalSekolah);
             cmd.Parameters.AddWithValue("@jenisKelamin", pendaftar.JenisKelamin);
@@ -268,19 +268,23 @@ namespace SPMBServices
             if (reader.HasRows)
             {
                 reader.Read();
-                dataPendaftar.NoPendaftaran = reader.IsDBNull(0) ? "-" : reader["no_pendaftaran"].ToString();
-                dataPendaftar.Email = reader.IsDBNull(3) ? "-" : reader["email"].ToString();
-                dataPendaftar.NoHP = reader.IsDBNull(4) ? "-" : reader["nohp"].ToString();
-                dataPendaftar.Nisn = reader.IsDBNull(5) ? "-" : reader["nisn"].ToString();
-                dataPendaftar.Nama = reader.IsDBNull(6) ? "-" : reader["nama"].ToString();
-                dataPendaftar.AsalSekolah = reader.IsDBNull(7) ? "-" : reader["asal_sekolah"].ToString();
-                dataPendaftar.JenisKelamin = reader.IsDBNull(8) ? "-" : reader["jenis_kelamin"].ToString();
-                dataPendaftar.Alamat = reader.IsDBNull(9) ? "-" : reader["alamat"].ToString();
-                dataPendaftar.TempatLahir = reader.IsDBNull(10) ? "-" : reader["tempat_lahir"].ToString();
-                dataPendaftar.NamaOrangTua = reader.IsDBNull(15) ? "-" : reader["nama_orang_tua"].ToString();
-                dataPendaftar.PekerjaanOrangTua = reader.IsDBNull(16) ? "-" : reader["pekerjaan_orang_tua"].ToString();
-                dataPendaftar.TanggalLahir = reader.IsDBNull(11) ? "-" : reader["tanggal_lahir"].ToString().Substring(0, 10);
-                dataPendaftar.WaktuTest = reader.IsDBNull(12) ? "-" : reader["waktu_test"].ToString().Substring(0, 10);
+                //reader.IsDBNull(11) ? "" : reader["tanggal_lahir"].ToString().Substring(0, 10);
+                DateTime dateTL = reader.IsDBNull(11) ? new DateTime() : Convert.ToDateTime(reader["tanggal_lahir"].ToString());
+                DateTime dateWT = reader.IsDBNull(11) ? new DateTime() : Convert.ToDateTime(reader["tanggal_lahir"].ToString());
+
+                dataPendaftar.NoPendaftaran = reader.IsDBNull(0) ? "" : reader["no_pendaftaran"].ToString();
+                dataPendaftar.Email = reader.IsDBNull(3) ? "" : reader["email"].ToString();
+                dataPendaftar.NoHP = reader.IsDBNull(4) ? "" : reader["nohp"].ToString();
+                dataPendaftar.Nisn = reader.IsDBNull(5) ? "" : reader["nisn"].ToString();
+                dataPendaftar.Nama = reader.IsDBNull(6) ? "" : reader["nama"].ToString();
+                dataPendaftar.AsalSekolah = reader.IsDBNull(7) ? "" : reader["asal_sekolah"].ToString();
+                dataPendaftar.JenisKelamin = reader.IsDBNull(8) ? "" : reader["jenis_kelamin"].ToString();
+                dataPendaftar.Alamat = reader.IsDBNull(9) ? "" : reader["alamat"].ToString();
+                dataPendaftar.TempatLahir = reader.IsDBNull(10) ? "" : reader["tempat_lahir"].ToString();
+                dataPendaftar.NamaOrangTua = reader.IsDBNull(15) ? "" : reader["nama_orang_tua"].ToString();
+                dataPendaftar.PekerjaanOrangTua = reader.IsDBNull(16) ? "" : reader["pekerjaan_orang_tua"].ToString();
+                dataPendaftar.TanggalLahir = dateTL.ToString("dd-MM-yyyy").Substring(0, 10);
+                dataPendaftar.WaktuTest = dateWT.ToString("dd-MM-yyyy").Substring(0, 10);
                 dataPendaftar.Jurusan1 = reader.IsDBNull(13) ? 0 : Convert.ToInt32(reader["jurusan1"].ToString());
                 dataPendaftar.Jurusan2 = reader.IsDBNull(14) ? 0 : Convert.ToInt32(reader["jurusan2"].ToString());
                 dataPendaftar.IdVerificator = reader.IsDBNull(17) ? 0 : Convert.ToInt32(reader["id_verificator"].ToString());
