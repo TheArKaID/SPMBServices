@@ -244,8 +244,10 @@ namespace SPMBServices
             if (reader.HasRows)
             {
                 reader.Read();
-                waktuPendaftaran.Mulai = reader["waktupendaftaranmulai"].ToString().Substring(0, 10);
-                waktuPendaftaran.Selesai = reader["waktupendaftaranselesai"].ToString().Substring(0, 10);
+                DateTime date1 = Convert.ToDateTime(reader["waktupendaftaranmulai"].ToString());
+                waktuPendaftaran.Mulai = date1.ToString("dd-MM-yyyy").Substring(0, 10);
+                DateTime date2 = Convert.ToDateTime(reader["waktupendaftaranselesai"].ToString());
+                waktuPendaftaran.Selesai = date2.ToString("dd-MM-yyyy").Substring(0, 10);
             }
 
             koneksi.Close();
