@@ -57,6 +57,15 @@ namespace SPMBServices
             UriTemplate = "waktuPendaftaran"
         )]
         WaktuPendaftaran CekWaktuPendaftaran();
+
+        [OperationContract]
+        [WebInvoke(
+            Method = "GET",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "waktuPengumuman"
+        )]
+        WaktuPengumuman CekWaktuPengumuman();
     }
 
     [DataContract]
@@ -149,6 +158,15 @@ namespace SPMBServices
         public string NoPendaftaran { get => noPendaftaran; set => noPendaftaran = value; }
         [DataMember]
         public string Status { get => status; set => status = value; }
+    }
+
+    [DataContract]
+    public class WaktuPengumuman
+    {
+        private string tanggal;
+
+        [DataMember]
+        public string Tanggal { get => tanggal; set => tanggal = value; }
     }
 }
 

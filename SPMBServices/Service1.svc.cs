@@ -295,5 +295,25 @@ namespace SPMBServices
 
             return dataPendaftar;
         }
+
+        public WaktuPengumuman CekWaktuPengumuman()
+        {
+            WaktuPengumuman waktuPengumuman = new WaktuPengumuman();
+            koneksi.ConnectionString = con;
+            query = "SELECT waktupengumuman FROM Config";
+            cmd = new SqlCommand(query, koneksi);
+
+            koneksi.Open();
+            reader = cmd.ExecuteReader();
+            if (reader.HasRows)
+            {
+                reader.Read();
+                DateTime date = Convert.ToDateTime(reader["waktupengumuman"].ToString());
+                waktuPengumuman.Tanggal  = date.ToString("dd-MM-yyyy").Substring(0, 10);
+            }
+
+            koneksi.Close();
+            return waktuPengumuman;
+        }
     }
 }
