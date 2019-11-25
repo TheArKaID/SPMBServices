@@ -321,5 +321,42 @@ namespace SPMBServices
             koneksi.Close();
             return waktuPengumuman;
         }
+
+        public LoginAdmin LoginAdmin(string username, string password)
+        {
+            LoginAdmin user = new LoginAdmin();
+            string status = cekLoginPendaftar(username, password);
+
+            if (!status.Equals("berhasil"))
+            {
+                user.Status = status;
+                return user;
+            }
+
+            koneksi.ConnectionString = con;
+            query = "SELECT id, nama, username FROM [User] WHERE username = @username AND password = @password";
+            cmd = new SqlCommand(query, koneksi);
+            cmd.Parameters.AddWithValue("@username", username);
+            cmd.Parameters.AddWithValue("@password", password);
+
+            koneksi.Open();
+            reader = cmd.ExecuteReader();
+            if (reader.HasRows)
+            {
+                reader.Read();
+                user.Id = Convert.ToString(reader.GetInt32(0));
+                user.Nama = reader.GetString(1);
+                user.Username = reader.GetString(2);
+                user.Status = status;
+                koneksi.Close();
+                return user;
+            }
+            else
+            {
+                koneksi.Close();
+                user.Status = "Username atau Password Salah.";
+                return user;
+            }
+        }
     }
 }

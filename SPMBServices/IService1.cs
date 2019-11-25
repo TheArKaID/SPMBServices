@@ -66,6 +66,16 @@ namespace SPMBServices
             UriTemplate = "waktuPengumuman"
         )]
         WaktuPengumuman CekWaktuPengumuman();
+
+        [OperationContract]
+        [WebInvoke(
+            Method = "GET",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "loginAdmin?username={username}&password={password}"
+        )]
+        LoginAdmin LoginAdmin(string username, string password);
+        
     }
 
     [DataContract]
@@ -167,6 +177,23 @@ namespace SPMBServices
 
         [DataMember]
         public string Tanggal { get => tanggal; set => tanggal = value; }
+    }
+
+    [DataContract]
+    public class LoginAdmin
+    {
+        private string nama;
+        private string status;
+        private string username, id;
+
+        [DataMember]
+        public string Nama { get => nama; set => nama = value; }
+        [DataMember]
+        public string Status { get => status; set => status = value; }
+        [DataMember]
+        public string Username { get => username; set => username = value; }
+        [DataMember]
+        public string Id { get => id; set => id = value; }
     }
 }
 
