@@ -75,6 +75,15 @@ namespace SPMBServices
             UriTemplate = "loginAdmin?username={username}&password={password}"
         )]
         LoginAdmin LoginAdmin(string username, string password);
+
+        [OperationContract]
+        [WebInvoke(
+            Method = "GET",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "waktuTest"
+        )]
+        WaktuTest CekWaktuTest();
         
     }
 
@@ -194,6 +203,19 @@ namespace SPMBServices
         public string Username { get => username; set => username = value; }
         [DataMember]
         public string Id { get => id; set => id = value; }
+    }
+
+    [DataContract]
+    public class WaktuTest
+    {
+        string test1, test2, test3;
+
+        [DataMember]
+        public string Test1 { get => test1; set => test1 = value; }
+        [DataMember]
+        public string Test2 { get => test2; set => test2 = value; }
+        [DataMember]
+        public string Test3 { get => test3; set => test3 = value; }
     }
 }
 

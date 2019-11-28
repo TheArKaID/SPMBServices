@@ -358,5 +358,29 @@ namespace SPMBServices
                 return user;
             }
         }
+
+        public WaktuTest CekWaktuTest()
+        {
+            WaktuTest waktuTest = new WaktuTest();
+            koneksi.ConnectionString = con;
+            query = "SELECT waktutest1, waktutest2, waktutest3 FROM Config";
+            cmd = new SqlCommand(query, koneksi);
+            
+            koneksi.Open();
+            reader = cmd.ExecuteReader();
+            if (reader.HasRows)
+            {
+                reader.Read();
+                DateTime T1 = Convert.ToDateTime(reader["waktutest1"].ToString());
+                waktuTest.Test1 = T1.ToString("dd-MM-yyyy").Substring(0, 10);
+                DateTime T2 = Convert.ToDateTime(reader["waktutest2"].ToString());
+                waktuTest.Test2 = T2.ToString("dd-MM-yyyy").Substring(0, 10);
+                DateTime T3 = Convert.ToDateTime(reader["waktutest3"].ToString());
+                waktuTest.Test3 = T3.ToString("dd-MM-yyyy").Substring(0, 10);
+            }
+
+            koneksi.Close();
+            return waktuTest;
+        }
     }
 }
