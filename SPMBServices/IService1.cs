@@ -84,6 +84,16 @@ namespace SPMBServices
             UriTemplate = "waktuTest"
         )]
         WaktuTest CekWaktuTest();
+
+        [OperationContract]
+        [WebInvoke(
+            Method = "GET",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "dataJurusan"
+        )]
+        List<DataJurusan> CekDataJurusan();
+
         
     }
 
@@ -216,6 +226,21 @@ namespace SPMBServices
         public string Test2 { get => test2; set => test2 = value; }
         [DataMember]
         public string Test3 { get => test3; set => test3 = value; }
+    }
+
+    [DataContract]
+    public class DataJurusan
+    {
+        string nama;
+        int id, idFakultas;
+
+        [DataMember]
+        public string Nama { get => nama; set => nama = value; }
+        [DataMember]
+        public int Id { get => id; set => id = value; }
+        [DataMember]
+        public int IdFakultas { get => idFakultas; set => idFakultas = value; }
+
     }
 }
 

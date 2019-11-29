@@ -382,5 +382,27 @@ namespace SPMBServices
             koneksi.Close();
             return waktuTest;
         }
+
+        public List<DataJurusan> CekDataJurusan()
+        {
+            List<DataJurusan> dataJurusan = new List<DataJurusan>();
+            koneksi.ConnectionString = con;
+            query = "SELECT * FROM Jurusan";
+            cmd = new SqlCommand(query, koneksi);
+
+            koneksi.Open();
+            reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                DataJurusan data = new DataJurusan();
+                data.Id = Convert.ToInt32(reader["id"].ToString());
+                data.Nama = reader["nama"].ToString();
+                data.IdFakultas = Convert.ToInt32(reader["id_fakultas"].ToString());
+                dataJurusan.Add(data);
+            }
+
+            koneksi.Close();
+            return dataJurusan;
+        }
     }
 }
