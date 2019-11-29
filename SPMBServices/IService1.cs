@@ -90,11 +90,18 @@ namespace SPMBServices
             Method = "GET",
             RequestFormat = WebMessageFormat.Json,
             ResponseFormat = WebMessageFormat.Json,
-            UriTemplate = "dataJurusan"
+            UriTemplate = "cekDaftarJurusan"
         )]
-        List<DataJurusan> CekDataJurusan();
+        List<DataJurusan> CekDaftarJurusan();
 
-        
+        [OperationContract]
+        [WebInvoke(
+            Method = "GET",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "dataJurusan?id={idJurusan}"
+        )]
+        DataJurusan CekJurusan(int idJurusan);
     }
 
     [DataContract]

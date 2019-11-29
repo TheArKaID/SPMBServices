@@ -270,7 +270,7 @@ namespace SPMBServices
                 reader.Read();
                 //reader.IsDBNull(11) ? "" : reader["tanggal_lahir"].ToString().Substring(0, 10);
                 DateTime dateTL = reader.IsDBNull(11) ? new DateTime() : Convert.ToDateTime(reader["tanggal_lahir"].ToString());
-                DateTime dateWT = reader.IsDBNull(11) ? new DateTime() : Convert.ToDateTime(reader["tanggal_lahir"].ToString());
+                DateTime dateWT = reader.IsDBNull(12) ? new DateTime() : Convert.ToDateTime(reader["waktu_test"].ToString());
 
                 dataPendaftar.NoPendaftaran = reader.IsDBNull(0) ? "" : reader["no_pendaftaran"].ToString();
                 dataPendaftar.Email = reader.IsDBNull(3) ? "" : reader["email"].ToString();
@@ -383,7 +383,7 @@ namespace SPMBServices
             return waktuTest;
         }
 
-        public List<DataJurusan> CekDataJurusan()
+        public List<DataJurusan> CekDaftarJurusan()
         {
             List<DataJurusan> dataJurusan = new List<DataJurusan>();
             koneksi.ConnectionString = con;
@@ -404,5 +404,28 @@ namespace SPMBServices
             koneksi.Close();
             return dataJurusan;
         }
+
+        public DataJurusan CekJurusan(int idJurusan)
+        {
+            DataJurusan jurusan = new DataJurusan();
+            koneksi.ConnectionString = con;
+            query = "SELECT * FROM Jurusan WHERE id = @idJurusan";
+            cmd = new SqlCommand(query, koneksi);
+            cmd.Parameters.AddWithValue("@idJurusan", idJurusan);
+
+            koneksi.Open();
+            reader = cmd.ExecuteReader();
+            if (reader.Read())
+            {
+                jurusan.Id = Convert.ToInt32(reader["id"].ToString());
+                jurusan.Nama = reader["nama"].ToString();
+                jurusan.IdFakultas = Convert.ToInt32(reader["id_fakultas"].ToString());
+            }
+
+            koneksi.Close();
+            return jurusan;
+        }
+
+        //TODO::Update Jurusan, Cek apakah sama, apakah salah satunya kosong,
     }
 }
