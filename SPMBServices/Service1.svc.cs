@@ -433,11 +433,27 @@ namespace SPMBServices
             if (!status.Equals("berhasil"))
                 return status;
 
+            DateTime waktuTest = new DateTime();
+            waktuTest = getWaktuTest();
+            
+            SqlConnection koneksiTA = new SqlConnection();
+            koneksiTA.ConnectionString = con;
+            string queryTA = "SELECT * FROM Tahun";
+            SqlCommand cmdTA = new SqlCommand(queryTA, koneksiTA);
+            koneksiTA.Open();
+            SqlDataReader readTA = cmdTA.ExecuteReader();
+            readTA.Read();
+            int idTA = Convert.ToInt32(readTA["id"]);
+            string tahunaktif = readTA["tahun"].ToString();
+            koneksiTA.Close();
+
             koneksi.ConnectionString = con;
-            query = "UPDATE Pendaftar SET [jurusan1] = @jurusan1, [jurusan2] = @jurusan2 WHERE no_pendaftaran = @no_pendaftaran";
+            query = "UPDATE Pendaftar SET [waktu_test] = @waktutest,[jurusan1] = @jurusan1, [jurusan2] = @jurusan2, [id_tahun_daftar] = @idta WHERE no_pendaftaran = @no_pendaftaran";
             cmd = new SqlCommand(query, koneksi);
+            cmd.Parameters.AddWithValue("@Waktutest", waktuTest);
             cmd.Parameters.AddWithValue("@jurusan1", id1);
             cmd.Parameters.AddWithValue("@jurusan2", id2);
+            cmd.Parameters.AddWithValue("@idta", idTA);
             cmd.Parameters.AddWithValue("@no_pendaftaran", noPendaftaran);
 
             koneksi.Open();
@@ -455,16 +471,60 @@ namespace SPMBServices
             return status;
         }
 
+        private DateTime getWaktuTest()
+        {
+            DateTime waktuTest = new DateTime();
+
+            koneksi.ConnectionString = con;
+            query = "SELECT COUNT(no_pendaftaran) AS 'rows' FROM Pendaftar";
+            cmd = new SqlCommand(query, koneksi);
+
+            SqlConnection koneksiWT = new SqlConnection();
+            koneksiWT.ConnectionString = con;
+            string queryWT = "SELECT waktutest1, waktutest2, waktutest3 FROM Config";
+            SqlCommand cmdWT = new SqlCommand(queryWT, koneksiWT);
+
+            koneksi.Open();
+            koneksiWT.Open();
+            reader = cmd.ExecuteReader();
+            SqlDataReader readWT = cmdWT.ExecuteReader();
+            readWT.Read();
+
+            if (reader.Read())
+            {
+                int rows = Convert.ToInt32(reader["rows"]);
+
+                if (rows <= 120)
+                {
+                    waktuTest = Convert.ToDateTime(readWT["waktutest1"]);
+                }
+                else if(rows <= 240)
+                {
+                    waktuTest = Convert.ToDateTime(readWT["waktutest2"]);
+                }
+                else
+                {
+                    waktuTest = Convert.ToDateTime(readWT["waktutest3"]);
+                }
+            }
+            else
+            {
+                waktuTest = Convert.ToDateTime(readWT["waktutest1"]);
+            }
+
+            koneksi.Close();
+
+            return waktuTest;
+        }
+
         private string cekSetJurusan(int id1, int id2)
         {
             if (id1.Equals(0) || id2.Equals(0))
                 return "Jurusan harus diisi untuk melanjutkan proses";
             else if (id1.Equals(id2))
-                return "Jurusan Tidak boleh sama"; 
+                return "Jurusan Tidak boleh sama";
             else
                 return "berhasil";
         }
-
-        //TODO::Update Jurusan, Cek apakah sama, apakah salah satunya kosong,
     }
 }
