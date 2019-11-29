@@ -102,6 +102,15 @@ namespace SPMBServices
             UriTemplate = "dataJurusan?id={idJurusan}"
         )]
         DataJurusan CekJurusan(int idJurusan);
+
+        [OperationContract]
+        [WebInvoke(
+            Method = "POST",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "setJurusan?noPendaftaran={noPendaftaran}&id1={id1}&id2={id2}"
+        )]
+        string setJurusan(string noPendaftaran, int id1, int id2);
     }
 
     [DataContract]

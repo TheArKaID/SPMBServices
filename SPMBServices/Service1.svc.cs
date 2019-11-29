@@ -426,6 +426,45 @@ namespace SPMBServices
             return jurusan;
         }
 
+        public string setJurusan(string noPendaftaran, int id1, int id2)
+        {
+            string status = cekSetJurusan(id1, id2);
+
+            if (!status.Equals("berhasil"))
+                return status;
+
+            koneksi.ConnectionString = con;
+            query = "UPDATE Pendaftar SET [jurusan1] = @jurusan1, [jurusan2] = @jurusan2 WHERE no_pendaftaran = @no_pendaftaran";
+            cmd = new SqlCommand(query, koneksi);
+            cmd.Parameters.AddWithValue("@jurusan1", id1);
+            cmd.Parameters.AddWithValue("@jurusan2", id2);
+            cmd.Parameters.AddWithValue("@no_pendaftaran", noPendaftaran);
+
+            koneksi.Open();
+            try
+            {
+                cmd.ExecuteNonQuery();
+                status = "berhasil";
+            } catch(Exception e)
+            {
+                status = "Error "+e.Message;
+            }
+
+            koneksi.Close();
+
+            return status;
+        }
+
+        private string cekSetJurusan(int id1, int id2)
+        {
+            if (id1.Equals(0) || id2.Equals(0))
+                return "Jurusan harus diisi untuk melanjutkan proses";
+            else if (id1.Equals(id2))
+                return "Jurusan Tidak boleh sama"; 
+            else
+                return "berhasil";
+        }
+
         //TODO::Update Jurusan, Cek apakah sama, apakah salah satunya kosong,
     }
 }
