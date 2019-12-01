@@ -259,7 +259,11 @@ namespace SPMBServices
             Pendaftar dataPendaftar = new Pendaftar();
 
             koneksi.ConnectionString = con;
-            query = "SELECT * FROM Pendaftar WHERE no_pendaftaran = @noPendaftaran";
+            query = "SELECT * FROM Pendaftar " +
+                "JOIN Jurusan AS J1 ON Pendaftar.jurusan1 = J1.id " +
+                "JOIN Jurusan AS J2 ON Pendaftar.jurusan2 = J2.id " +
+                "JOIN Tahun ON Pendaftar.id_tahun_daftar = Tahun.id WHERE no_pendaftaran = @noPendaftaran";
+            
             cmd = new SqlCommand(query, koneksi);
             cmd.Parameters.AddWithValue("@noPendaftaran", noPendaftaran);
 
@@ -268,7 +272,7 @@ namespace SPMBServices
             if (reader.HasRows)
             {
                 reader.Read();
-                //reader.IsDBNull(11) ? "" : reader["tanggal_lahir"].ToString().Substring(0, 10);
+                
                 DateTime dateTL = reader.IsDBNull(11) ? new DateTime() : Convert.ToDateTime(reader["tanggal_lahir"].ToString());
                 DateTime dateWT = reader.IsDBNull(12) ? new DateTime() : Convert.ToDateTime(reader["waktu_test"].ToString());
 
@@ -287,6 +291,8 @@ namespace SPMBServices
                 dataPendaftar.WaktuTest = dateWT.ToString("dd-MM-yyyy").Substring(0, 10);
                 dataPendaftar.Jurusan1 = reader.IsDBNull(13) ? 0 : Convert.ToInt32(reader["jurusan1"].ToString());
                 dataPendaftar.Jurusan2 = reader.IsDBNull(14) ? 0 : Convert.ToInt32(reader["jurusan2"].ToString());
+                dataPendaftar.NamaJ1 = reader.IsDBNull(21) ? "" : reader[21].ToString();
+                dataPendaftar.NamaJ2 = reader.IsDBNull(24) ? "" : reader[24].ToString();
                 dataPendaftar.IdVerificator = reader.IsDBNull(17) ? 0 : Convert.ToInt32(reader["id_verificator"].ToString());
                 dataPendaftar.IdStatus = reader.IsDBNull(18) ? 0 : Convert.ToInt32(reader["id_status"].ToString());
                 dataPendaftar.IdTahunDaftar = reader.IsDBNull(19) ? 0 : Convert.ToInt32(reader["id_tahun_daftar"].ToString());
