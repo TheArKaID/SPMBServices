@@ -118,7 +118,7 @@ namespace SPMBServices
     {
         string noPendaftaran, nama, email, nohp, nisn, asalSekolah, jenisKelamin, alamat, tempatLahir, namaOrangTua, pekerjaanOrangTua, status;
         int idVerificator, idStatus, idTahunDaftar, jurusan1, jurusan2;
-        string tanggalLahir, waktuTest, namaJ1, namaJ2;
+        string tanggalLahir, waktuTest, namaJ1, namaJ2, verificator, statusPendaftar;
         
         [DataMember]
         public string NoPendaftaran { get => noPendaftaran; set => noPendaftaran = value; }
@@ -162,6 +162,10 @@ namespace SPMBServices
         public string NamaJ1 { get => namaJ1; set => namaJ1 = value; }
         [DataMember]
         public string NamaJ2 { get => namaJ2; set => namaJ2 = value; }
+        [DataMember]
+        public string Verificator { get => verificator; set => verificator = value; }
+        [DataMember]
+        public string StatusPendaftar { get => statusPendaftar; set => statusPendaftar = value; }
     }
 
     [DataContract]

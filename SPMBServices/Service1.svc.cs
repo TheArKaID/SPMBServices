@@ -262,7 +262,10 @@ namespace SPMBServices
             query = "SELECT * FROM Pendaftar " +
                 "JOIN Jurusan AS J1 ON Pendaftar.jurusan1 = J1.id " +
                 "JOIN Jurusan AS J2 ON Pendaftar.jurusan2 = J2.id " +
-                "JOIN Tahun ON Pendaftar.id_tahun_daftar = Tahun.id WHERE no_pendaftaran = @noPendaftaran";
+                "JOIN Tahun ON Pendaftar.id_tahun_daftar = Tahun.id " +
+                "JOIN [User] ON Pendaftar.id_verificator = [User].[id] " +
+                "JOIN StatusPendaftar ON Pendaftar.id_status = StatusPendaftar.id " +
+                "WHERE no_pendaftaran = @noPendaftaran";
             
             cmd = new SqlCommand(query, koneksi);
             cmd.Parameters.AddWithValue("@noPendaftaran", noPendaftaran);
@@ -295,7 +298,9 @@ namespace SPMBServices
                 dataPendaftar.NamaJ2 = reader.IsDBNull(24) ? "" : reader[24].ToString();
                 dataPendaftar.IdVerificator = reader.IsDBNull(17) ? 0 : Convert.ToInt32(reader["id_verificator"].ToString());
                 dataPendaftar.IdStatus = reader.IsDBNull(18) ? 0 : Convert.ToInt32(reader["id_status"].ToString());
-                dataPendaftar.IdTahunDaftar = reader.IsDBNull(19) ? 0 : Convert.ToInt32(reader["id_tahun_daftar"].ToString());
+                dataPendaftar.IdTahunDaftar = reader.IsDBNull(27) ? 0 : Convert.ToInt32(reader[27].ToString());
+                dataPendaftar.Verificator = reader.IsDBNull(29) ? "" : reader[29].ToString();
+                dataPendaftar.StatusPendaftar = reader.IsDBNull(33) ? "" : reader[33].ToString();
                 dataPendaftar.Status = "berhasil";
             }
             else
@@ -439,27 +444,26 @@ namespace SPMBServices
             if (!status.Equals("berhasil"))
                 return status;
 
-            DateTime waktuTest = new DateTime();
-            waktuTest = getWaktuTest();
-            
-            SqlConnection koneksiTA = new SqlConnection();
-            koneksiTA.ConnectionString = con;
-            string queryTA = "SELECT * FROM Tahun";
-            SqlCommand cmdTA = new SqlCommand(queryTA, koneksiTA);
-            koneksiTA.Open();
-            SqlDataReader readTA = cmdTA.ExecuteReader();
-            readTA.Read();
-            int idTA = Convert.ToInt32(readTA["id"]);
-            string tahunaktif = readTA["tahun"].ToString();
-            koneksiTA.Close();
+            DateTime waktuTest = getWaktuTest();
+
+            int idTA = getIDTA();
+
+            int idStatus = getIDStatus();
 
             koneksi.ConnectionString = con;
-            query = "UPDATE Pendaftar SET [waktu_test] = @waktutest,[jurusan1] = @jurusan1, [jurusan2] = @jurusan2, [id_tahun_daftar] = @idta WHERE no_pendaftaran = @no_pendaftaran";
+            query = "UPDATE Pendaftar SET [waktu_test] = @waktutest, " +
+                "[jurusan1] = @jurusan1, " +
+                "[jurusan2] = @jurusan2, " +
+                "[id_verificator] = @verif, " +
+                "[id_tahun_daftar] = @idta, " +
+                "[id_status] = @ids WHERE no_pendaftaran = @no_pendaftaran";
             cmd = new SqlCommand(query, koneksi);
             cmd.Parameters.AddWithValue("@Waktutest", waktuTest);
             cmd.Parameters.AddWithValue("@jurusan1", id1);
             cmd.Parameters.AddWithValue("@jurusan2", id2);
+            cmd.Parameters.AddWithValue("@verif", "1");
             cmd.Parameters.AddWithValue("@idta", idTA);
+            cmd.Parameters.AddWithValue("@ids", idStatus);
             cmd.Parameters.AddWithValue("@no_pendaftaran", noPendaftaran);
 
             koneksi.Open();
@@ -475,6 +479,36 @@ namespace SPMBServices
             koneksi.Close();
 
             return status;
+        }
+
+        private int getIDStatus()
+        {
+            SqlConnection koneksiS = new SqlConnection();
+            koneksiS.ConnectionString = con;
+            string queryS = "SELECT id FROM StatusPendaftar";
+            SqlCommand cmdS = new SqlCommand(queryS, koneksiS);
+            koneksiS.Open();
+            SqlDataReader readS = cmdS.ExecuteReader();
+            readS.Read();
+            int status = Convert.ToInt32(readS["id"]);
+            koneksiS.Close();
+
+            return status;
+        }
+
+        private int getIDTA()
+        {
+            SqlConnection koneksiTA = new SqlConnection();
+            koneksiTA.ConnectionString = con;
+            string queryTA = "SELECT id FROM Tahun";
+            SqlCommand cmdTA = new SqlCommand(queryTA, koneksiTA);
+            koneksiTA.Open();
+            SqlDataReader readTA = cmdTA.ExecuteReader();
+            readTA.Read();
+            int idTA = Convert.ToInt32(readTA["id"]);
+            koneksiTA.Close();
+
+            return idTA;
         }
 
         private DateTime getWaktuTest()
