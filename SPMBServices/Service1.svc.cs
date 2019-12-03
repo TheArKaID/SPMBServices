@@ -566,5 +566,44 @@ namespace SPMBServices
             else
                 return "berhasil";
         }
+
+        public string UpdateInformasi(string infoData)
+        {
+            string status = "";
+
+            DataInformasi dataInformasi = new DataInformasi();
+            dataInformasi = JsonConvert.DeserializeObject<DataInformasi>(infoData);
+            koneksi.ConnectionString = con;
+            query = "UPDATE Config SET " +
+                "[waktupendaftaranmulai] = @waktuPendMu, " +
+                "[waktupendaftaranselesai] = @waktuPendSe, " +
+                "[waktupengumuman] = @waktuPeng," +
+                "[waktutest1] = @waktuTest1, " +
+                "[waktutest2] = @waktuTest2, " +
+                "[waktutest3] = @waktuTest3, " +
+                "[tahunaktif] = @tahunAktif";
+            cmd = new SqlCommand(query, koneksi);
+            cmd.Parameters.AddWithValue("@waktuPendMu", dataInformasi.WaktuPendaftaranMulai);
+            cmd.Parameters.AddWithValue("@waktuPendSe", dataInformasi.WaktuPendaftaranSelesai);
+            cmd.Parameters.AddWithValue("@waktuPeng", dataInformasi.WaktuPengumuman);
+            cmd.Parameters.AddWithValue("@waktuTest1", dataInformasi.WaktuTest1);
+            cmd.Parameters.AddWithValue("@waktuTest2", dataInformasi.WaktuTest2);
+            cmd.Parameters.AddWithValue("@waktuTest3", dataInformasi.WaktuTest3);
+            cmd.Parameters.AddWithValue("@tahunAktif", dataInformasi.TahunAktif);
+            
+            koneksi.Open();
+            try
+            {
+                cmd.ExecuteNonQuery();
+                status = "berhasil";
+            }
+            catch (Exception e)
+            {
+                status = "Error - " + e.Message + " Please Contact the Administrator.";
+            }
+            koneksi.Close();
+
+            return status;
+        }
     }
 }

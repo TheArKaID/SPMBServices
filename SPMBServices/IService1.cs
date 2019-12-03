@@ -111,6 +111,15 @@ namespace SPMBServices
             UriTemplate = "setJurusan?noPendaftaran={noPendaftaran}&id1={id1}&id2={id2}"
         )]
         string setJurusan(string noPendaftaran, int id1, int id2);
+
+        [OperationContract]
+        [WebInvoke(
+            Method = "POST",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "updateInformasi?jsonData={infoData}"
+        )]
+        string UpdateInformasi(string infoData);
     }
 
     [DataContract]
@@ -265,6 +274,28 @@ namespace SPMBServices
         [DataMember]
         public int IdFakultas { get => idFakultas; set => idFakultas = value; }
 
+    }
+
+    [DataContract]
+    public class DataInformasi
+    {
+        DateTime waktuTest1, waktuTest2, waktuTest3, waktuPengumuman, waktuPendaftaranMulai, waktuPendaftaranSelesai;
+        string tahunAktif;
+
+        [DataMember]
+        public DateTime WaktuTest1 { get => waktuTest1; set => waktuTest1 = value; }
+        [DataMember]
+        public DateTime WaktuTest2 { get => waktuTest2; set => waktuTest2 = value; }
+        [DataMember]
+        public DateTime WaktuTest3 { get => waktuTest3; set => waktuTest3 = value; }
+        [DataMember]
+        public DateTime WaktuPengumuman { get => waktuPengumuman; set => waktuPengumuman = value; }
+        [DataMember]
+        public DateTime WaktuPendaftaranMulai { get => waktuPendaftaranMulai; set => waktuPendaftaranMulai = value; }
+        [DataMember]
+        public DateTime WaktuPendaftaranSelesai { get => waktuPendaftaranSelesai; set => waktuPendaftaranSelesai = value; }
+        [DataMember]
+        public string TahunAktif { get => tahunAktif; set => tahunAktif = value; }
     }
 }
 
