@@ -291,7 +291,7 @@ namespace SPMBServices
                 dataPendaftar.NamaOrangTua = reader.IsDBNull(15) ? "" : reader["nama_orang_tua"].ToString();
                 dataPendaftar.PekerjaanOrangTua = reader.IsDBNull(16) ? "" : reader["pekerjaan_orang_tua"].ToString();
                 dataPendaftar.TanggalLahir = dateTL.ToString("dd-MM-yyyy").Substring(0, 10);
-                dataPendaftar.WaktuTest = dateWT.ToString("dd-MM-yyyy").Substring(0, 10);
+                dataPendaftar.WaktuTest = dateWT.ToString("dd-MM-yyyy HH:mm");
                 dataPendaftar.Jurusan1 = reader.IsDBNull(13) ? 0 : Convert.ToInt32(reader["jurusan1"].ToString());
                 dataPendaftar.Jurusan2 = reader.IsDBNull(14) ? 0 : Convert.ToInt32(reader["jurusan2"].ToString());
                 dataPendaftar.NamaJ1 = reader.IsDBNull(21) ? "" : reader[21].ToString();
