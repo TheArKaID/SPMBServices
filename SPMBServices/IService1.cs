@@ -120,6 +120,15 @@ namespace SPMBServices
             UriTemplate = "updateInformasi?jsonData={infoData}"
         )]
         string UpdateInformasi(string infoData);
+
+        [OperationContract]
+        [WebInvoke(
+            Method = "GET",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "getAllPendaftar"
+        )]
+        List<Pendaftar> GetAllPendaftar();
     }
 
     [DataContract]
