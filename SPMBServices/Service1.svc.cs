@@ -552,6 +552,7 @@ namespace SPMBServices
                 waktuTest = Convert.ToDateTime(readWT["waktutest1"]);
             }
 
+            koneksiWT.Close();
             koneksi.Close();
 
             return waktuTest;
@@ -641,6 +642,45 @@ namespace SPMBServices
             koneksi.Close();
 
             return pendaftars;
+        }
+
+        public string VerifikasiPendaftar(string noPendaftaran)
+        {
+            // TODO : Add Admin ID to id_verificator
+            string status = "";
+
+            SqlConnection koneksiIDS = new SqlConnection();
+            koneksiIDS.ConnectionString = con;
+            string queryIDS = "SELECT id FROM StatusPendaftar WHERE status = @status";
+            SqlCommand cmdIDS = new SqlCommand(queryIDS, koneksiIDS);
+            cmdIDS.Parameters.AddWithValue("@status", "Terverifikasi");
+            
+            koneksiIDS.Open();
+            reader = cmdIDS.ExecuteReader();
+            reader.Read();
+            string ids = reader["id"].ToString();
+            koneksiIDS.Close();
+            
+            koneksi.ConnectionString = con;
+            query = "UPDATE Pendaftar SET [id_status] = @idstatus WHERE no_pendaftaran = @no_pendaftaran";
+            cmd = new SqlCommand(query, koneksi);
+            cmd.Parameters.AddWithValue("@idstatus", ids);
+            cmd.Parameters.AddWithValue("@no_pendaftaran", noPendaftaran);
+
+            koneksi.Open();
+            try
+            {
+                cmd.ExecuteNonQuery();
+                status = "berhasil";
+            }
+            catch (Exception e)
+            {
+                status = "Error " + e.Message;
+            }
+
+            koneksi.Close();
+
+            return status;
         }
     }
 }

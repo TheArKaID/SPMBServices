@@ -129,6 +129,15 @@ namespace SPMBServices
             UriTemplate = "getAllPendaftar"
         )]
         List<Pendaftar> GetAllPendaftar();
+
+        [OperationContract]
+        [WebInvoke(
+            Method = "POST",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "verifikasiPendaftar?noPendaftaran={noPendaftaran}"
+        )]
+        string VerifikasiPendaftar(string noPendaftaran);
     }
 
     [DataContract]
