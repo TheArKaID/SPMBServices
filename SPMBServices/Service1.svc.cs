@@ -682,5 +682,67 @@ namespace SPMBServices
 
             return status;
         }
+
+        public List<Pendaftar> DownloadAllPendaftar()
+        {
+            List<Pendaftar> pendaftars = new List<Pendaftar>();
+
+            koneksi.ConnectionString = con;
+            query = "SELECT * FROM Pendaftar " +
+                "JOIN Jurusan AS J1 ON Pendaftar.jurusan1 = J1.id " +
+                "JOIN Jurusan AS J2 ON Pendaftar.jurusan2 = J2.id " +
+                "JOIN Tahun ON Pendaftar.id_tahun_daftar = Tahun.id " +
+                "JOIN [User] ON Pendaftar.id_verificator = [User].[id] " +
+                "JOIN StatusPendaftar ON Pendaftar.id_status = StatusPendaftar.id";
+
+            cmd = new SqlCommand(query, koneksi);
+
+            koneksi.Open();
+            reader = cmd.ExecuteReader();
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    DateTime dateTL = reader.IsDBNull(11) ? new DateTime() : Convert.ToDateTime(reader["tanggal_lahir"].ToString());
+                    DateTime dateWT = reader.IsDBNull(12) ? new DateTime() : Convert.ToDateTime(reader["waktu_test"].ToString());
+
+                    Pendaftar dataPendaftar = new Pendaftar();
+                    dataPendaftar.NoPendaftaran = reader.IsDBNull(0) ? "" : reader["no_pendaftaran"].ToString();
+                    dataPendaftar.Email = reader.IsDBNull(3) ? "" : reader["email"].ToString();
+                    dataPendaftar.NoHP = reader.IsDBNull(4) ? "" : reader["nohp"].ToString();
+                    dataPendaftar.Nisn = reader.IsDBNull(5) ? "" : reader["nisn"].ToString();
+                    dataPendaftar.Nama = reader.IsDBNull(6) ? "" : reader["nama"].ToString();
+                    dataPendaftar.AsalSekolah = reader.IsDBNull(7) ? "" : reader["asal_sekolah"].ToString();
+                    dataPendaftar.JenisKelamin = reader.IsDBNull(8) ? "" : reader["jenis_kelamin"].ToString();
+                    dataPendaftar.Alamat = reader.IsDBNull(9) ? "" : reader["alamat"].ToString();
+                    dataPendaftar.TempatLahir = reader.IsDBNull(10) ? "" : reader["tempat_lahir"].ToString();
+                    dataPendaftar.NamaOrangTua = reader.IsDBNull(15) ? "" : reader["nama_orang_tua"].ToString();
+                    dataPendaftar.PekerjaanOrangTua = reader.IsDBNull(16) ? "" : reader["pekerjaan_orang_tua"].ToString();
+                    dataPendaftar.TanggalLahir = dateTL.ToString("dd-MM-yyyy").Substring(0, 10);
+                    dataPendaftar.WaktuTest = dateWT.ToString("dd-MM-yyyy HH:mm");
+                    dataPendaftar.Jurusan1 = reader.IsDBNull(13) ? 0 : Convert.ToInt32(reader["jurusan1"].ToString());
+                    dataPendaftar.Jurusan2 = reader.IsDBNull(14) ? 0 : Convert.ToInt32(reader["jurusan2"].ToString());
+                    dataPendaftar.NamaJ1 = reader.IsDBNull(21) ? "" : reader[21].ToString();
+                    dataPendaftar.NamaJ2 = reader.IsDBNull(24) ? "" : reader[24].ToString();
+                    dataPendaftar.IdVerificator = reader.IsDBNull(17) ? 0 : Convert.ToInt32(reader["id_verificator"].ToString());
+                    dataPendaftar.IdStatus = reader.IsDBNull(18) ? 0 : Convert.ToInt32(reader["id_status"].ToString());
+                    dataPendaftar.IdTahunDaftar = reader.IsDBNull(27) ? 0 : Convert.ToInt32(reader[27].ToString());
+                    dataPendaftar.Verificator = reader.IsDBNull(29) ? "" : reader[29].ToString();
+                    dataPendaftar.StatusPendaftar = reader.IsDBNull(33) ? "" : reader[33].ToString();
+                    dataPendaftar.Status = "berhasil";
+
+                    pendaftars.Add(dataPendaftar);
+                }
+            }
+            else
+            {
+                //dataPendaftar.Status = "gagal";
+                throw new WebFaultException<string>("Belum ada Pendaftar", System.Net.HttpStatusCode.NoContent);
+            }
+
+            koneksi.Close();
+
+            return pendaftars;
+        }
     }
 }

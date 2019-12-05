@@ -138,6 +138,15 @@ namespace SPMBServices
             UriTemplate = "verifikasiPendaftar?noPendaftaran={noPendaftaran}"
         )]
         string VerifikasiPendaftar(string noPendaftaran);
+
+        [OperationContract]
+        [WebInvoke(
+            Method = "GET",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "downloadAllPendaftar"
+        )]
+        List<Pendaftar> DownloadAllPendaftar();
     }
 
     [DataContract]
