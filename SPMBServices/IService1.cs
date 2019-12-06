@@ -147,6 +147,16 @@ namespace SPMBServices
             UriTemplate = "downloadAllPendaftar"
         )]
         List<Pendaftar> DownloadAllPendaftar();
+
+        [OperationContract]
+        [WebInvoke(
+            Method = "POST",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "hapusPendaftar?noPendaftaran={noPendaftaran}"
+        )]
+        string HapusPendaftar(string noPendaftaran);
+
     }
 
     [DataContract]

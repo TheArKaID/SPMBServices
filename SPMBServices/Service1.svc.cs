@@ -744,5 +744,30 @@ namespace SPMBServices
 
             return pendaftars;
         }
+
+        public string HapusPendaftar(string noPendaftaran)
+        {
+            string status = "";
+            
+            koneksi.ConnectionString = con;
+            query = "DELETE FROM Pendaftar WHERE no_pendaftaran = @no_pendaftaran";
+            cmd = new SqlCommand(query, koneksi);
+            cmd.Parameters.AddWithValue("@no_pendaftaran", noPendaftaran);
+
+            koneksi.Open();
+            try
+            {
+                cmd.ExecuteNonQuery();
+                status = "berhasil";
+            }
+            catch (Exception e)
+            {
+                status = "Error " + e.Message;
+            }
+
+            koneksi.Close();
+
+            return status;
+        }
     }
 }
