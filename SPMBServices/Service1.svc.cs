@@ -769,5 +769,47 @@ namespace SPMBServices
 
             return status;
         }
+
+        public string TambahPengumuman(string pengumumanData)
+        {
+            string status = "";
+            List<Pengumuman> pengumuman = new List<Pengumuman>();
+            
+            dynamic dirtyData = JsonConvert.DeserializeObject(pengumumanData);
+
+            foreach(dynamic data in dirtyData)
+            {
+                foreach(dynamic cleanData in data)
+                {
+                    Pengumuman whatIWant = JsonConvert.DeserializeObject<Pengumuman>(Convert.ToString(cleanData));
+                    pengumuman.Add(whatIWant);
+                }
+            }
+
+            koneksi.ConnectionString = con;
+            query = "INSERT INTO [PengumumanPendaftar]([no_pendaftaran], [nama], [nama_jurusan])" +
+                "VALUES(@noPendaftaran, @nama, @jurusan)";
+            foreach(Pengumuman data in pengumuman)
+            {
+                cmd = new SqlCommand(query, koneksi);
+                cmd.Parameters.AddWithValue("@noPendaftaran", data.NoPendaftaran);
+                cmd.Parameters.AddWithValue("@nama", data.Nama);
+                cmd.Parameters.AddWithValue("@jurusan", data.Jurusan);
+
+                koneksi.Open();
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    status = "berhasil";
+                }
+                catch (Exception e)
+                {
+                    status = "Error - " + e.Message + " Please Contact the Administrator.";
+                }
+                koneksi.Close();
+            }
+
+            return status;
+        }
     }
 }

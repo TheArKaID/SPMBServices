@@ -157,6 +157,15 @@ namespace SPMBServices
         )]
         string HapusPendaftar(string noPendaftaran);
 
+        [OperationContract]
+        [WebInvoke(
+            Method = "POST",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "tambahPengumuman?pengumumanData={pengumumanData}"
+        )]
+        string TambahPengumuman(string pengumumanData);
+
     }
 
     [DataContract]
@@ -333,6 +342,17 @@ namespace SPMBServices
         public DateTime WaktuPendaftaranSelesai { get => waktuPendaftaranSelesai; set => waktuPendaftaranSelesai = value; }
         [DataMember]
         public string TahunAktif { get => tahunAktif; set => tahunAktif = value; }
+    }
+
+    [DataContract]
+    public class Pengumuman
+    {
+        [DataMember]
+        public string NoPendaftaran { get; set; }
+        [DataMember]
+        public string Nama { get; set; }
+        [DataMember]
+        public string Jurusan { get; set; }
     }
 }
 
