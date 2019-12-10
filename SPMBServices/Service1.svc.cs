@@ -801,6 +801,7 @@ namespace SPMBServices
                 {
                     cmd.ExecuteNonQuery();
                     status = "berhasil";
+                    UpdateStatusPendaftar(data.NoPendaftaran);
                 }
                 catch (Exception e)
                 {
@@ -810,6 +811,32 @@ namespace SPMBServices
             }
 
             return status;
+        }
+
+        private void UpdateStatusPendaftar(string noPendaftaran)
+        {
+            SqlConnection koneksiIDS = new SqlConnection();
+            koneksiIDS.ConnectionString = con;
+            string queryIDS = "SELECT id FROM StatusPendaftar WHERE status = @status";
+            SqlCommand cmdIDS = new SqlCommand(queryIDS, koneksiIDS);
+            cmdIDS.Parameters.AddWithValue("@status", "Diterima");
+
+            koneksiIDS.Open();
+            reader = cmdIDS.ExecuteReader();
+            reader.Read();
+            string ids = reader["id"].ToString();
+            koneksiIDS.Close();
+
+            SqlConnection koneksiUSP = new SqlConnection();
+            koneksiIDS.ConnectionString = con;
+            string queryUSP = "UPDATE Pendaftar SET [id_status] = @idstatus WHERE no_pendaftaran = @no_pendaftaran";
+            SqlCommand cmdUSP = new SqlCommand(queryUSP, koneksiUSP);
+            cmdUSP.Parameters.AddWithValue("@idstatus", ids);
+            cmdUSP.Parameters.AddWithValue("@no_pendaftaran", noPendaftaran);
+
+            koneksiUSP.Open();
+            cmdUSP.ExecuteNonQuery();
+            koneksiUSP.Close();
         }
     }
 }
