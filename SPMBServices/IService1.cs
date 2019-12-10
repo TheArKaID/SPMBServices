@@ -166,6 +166,14 @@ namespace SPMBServices
         )]
         string TambahPengumuman(string pengumumanData);
 
+        [OperationContract]
+        [WebInvoke(
+            Method = "GET",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "cekPengumumanPendaftar"
+        )]
+        List<Pendaftar> CekPengumumanPendaftar();
     }
 
     [DataContract]
