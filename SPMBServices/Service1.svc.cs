@@ -917,5 +917,47 @@ namespace SPMBServices
 
             return pendaftars;
         }
+
+        public List<Pendaftar> CariPendaftar(string search)
+        {
+
+            List<Pendaftar> pendaftars = new List<Pendaftar>();
+
+            koneksi.ConnectionString = con;
+            query = "SELECT * FROM Pendaftar " +
+                "JOIN StatusPendaftar ON Pendaftar.id_status = StatusPendaftar.id " +
+                "WHERE Pendaftar.nama LIKE @nama";
+
+            cmd = new SqlCommand(query, koneksi);
+            cmd.Parameters.AddWithValue("@nama", '%' + search + '%');
+
+            koneksi.Open();
+            reader = cmd.ExecuteReader();
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    Pendaftar dataPendaftar = new Pendaftar();
+                    dataPendaftar.NoPendaftaran = reader.IsDBNull(0) ? "" : reader["no_pendaftaran"].ToString();
+                    dataPendaftar.Nama = reader.IsDBNull(6) ? "" : reader["nama"].ToString();
+                    dataPendaftar.JenisKelamin = reader.IsDBNull(8) ? "" : reader["jenis_kelamin"].ToString();
+                    dataPendaftar.Alamat = reader.IsDBNull(9) ? "" : reader["alamat"].ToString();
+                    dataPendaftar.StatusPendaftar = reader.IsDBNull(21) ? "" : reader[21].ToString();
+
+                    dataPendaftar.Status = "berhasil";
+
+                    pendaftars.Add(dataPendaftar);
+                }
+            }
+            else
+            {
+                //dataPendaftar.Status = "gagal";
+                throw new WebFaultException<string>("Belum ada Pendaftar", System.Net.HttpStatusCode.NoContent);
+            }
+
+            koneksi.Close();
+
+            return pendaftars;
+        }
     }
 }
