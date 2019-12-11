@@ -174,6 +174,15 @@ namespace SPMBServices
             UriTemplate = "cekPengumumanPendaftar"
         )]
         List<Pendaftar> CekPengumumanPendaftar();
+        
+        [OperationContract]
+        [WebInvoke(
+            Method = "GET",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "cariPengumumanPendaftar?search={search}"
+        )]
+        List<Pendaftar> CariPengumumanPendaftar(string search);
     }
 
     [DataContract]
