@@ -192,6 +192,15 @@ namespace SPMBServices
             UriTemplate = "cariPendaftar?search={search}"
         )]
         List<Pendaftar> CariPendaftar(string search);
+
+        [OperationContract]
+        [WebInvoke(
+            Method = "GET",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "tambahTahun?tahun={tahun}"
+        )]
+        string TambahTahun(string tahun);
     }
 
     [DataContract]

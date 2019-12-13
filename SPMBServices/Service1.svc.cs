@@ -959,5 +959,50 @@ namespace SPMBServices
 
             return pendaftars;
         }
+
+        public string TambahTahun(string tahun)
+        {
+
+            string status = "";
+            
+            koneksi.ConnectionString = con;
+            query = "INSERT INTO [Tahun]([tahun])" +
+                "VALUES(@tahun)";
+
+            if (cekTahun(tahun)!="benar")
+            {
+                return cekTahun(tahun);
+            }
+
+            cmd = new SqlCommand(query, koneksi);
+            cmd.Parameters.AddWithValue("@tahun", tahun);
+
+            koneksi.Open();
+            try
+            {
+                cmd.ExecuteNonQuery();
+                status = "berhasil";
+            }
+            catch (Exception e)
+            {
+                throw new WebFaultException<string>("Gagal. Silahkan hubungi Administrator.", System.Net.HttpStatusCode.Unused);
+            }
+            koneksi.Close();
+
+            return status;
+        }
+
+        private string cekTahun(string tahun)
+        {
+            if(int.TryParse(tahun, out int result))
+            {
+                return "benar";
+            }
+            else
+            {
+                throw new WebFaultException<string>("Masukkan tahun berupa angka", System.Net.HttpStatusCode.Unused);
+            }
+
+        }
     }
 }
