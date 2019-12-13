@@ -210,6 +210,16 @@ namespace SPMBServices
             UriTemplate = "cekTahunPendaftaran"
         )]
         List<TahunPendaftaran> CekTahunPendaftaran();
+
+
+        [OperationContract]
+        [WebInvoke(
+            Method = "GET",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "cekTahunAktif"
+        )]
+        string CekTahunAktif();
     }
 
     [DataContract]

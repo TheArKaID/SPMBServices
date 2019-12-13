@@ -1036,5 +1036,31 @@ namespace SPMBServices
 
             return tahuns;
         }
+
+        public string CekTahunAktif()
+        {
+            string tahun = "";
+
+            koneksi.ConnectionString = con;
+            query = "SELECT tahunaktif FROM Config";
+
+            cmd = new SqlCommand(query, koneksi);
+
+            koneksi.Open();
+            reader = cmd.ExecuteReader();
+            if (reader.HasRows)
+            {
+                reader.Read();
+                tahun = reader[0].ToString();
+            }
+            else
+            {
+                throw new WebFaultException<string>("Belum ada Tahun", System.Net.HttpStatusCode.NoContent);
+            }
+
+            koneksi.Close();
+
+            return tahun;
+        }
     }
 }
