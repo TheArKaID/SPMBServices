@@ -857,7 +857,8 @@ namespace SPMBServices
 
             koneksi.ConnectionString = con;
             query = "SELECT * FROM PengumumanPendaftar " +
-                "JOIN Pendaftar ON PengumumanPendaftar.no_pendaftaran = Pendaftar.no_pendaftaran";
+                "JOIN Pendaftar ON PengumumanPendaftar.no_pendaftaran = Pendaftar.no_pendaftaran " +
+                "WHERE Pendaftar.id_tahun_daftar = (SELECT Tahun.id FROM Tahun JOIN Config ON Config.tahunaktif = Tahun.tahun)";
 
             cmd = new SqlCommand(query, koneksi);
 
