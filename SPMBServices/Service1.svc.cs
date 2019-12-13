@@ -76,20 +76,21 @@ namespace SPMBServices
 
             if (reader.Read())
             {
+                string tahunAktif = CekTahunAktif();
                 current = reader.GetString(0);
                 editable = current.Substring(9, 5);
                 noPos = Int32.Parse(editable);
                 noPos++;
                 if (noPos > 9999)
-                    noPendaftaran = "SPMB2019-" + noPos;
+                    noPendaftaran = "SPMB"+ tahunAktif + "-" + noPos;
                 else if (noPos > 999)
-                    noPendaftaran = "SPMB2019-0" + noPos;
+                    noPendaftaran = "SPMB" + tahunAktif + "-0" + noPos;
                 else if (noPos > 99)
-                    noPendaftaran = "SPMB2019-00" + noPos;
+                    noPendaftaran = "SPMB" + tahunAktif + "-00" + noPos;
                 else if (noPos > 9)
-                    noPendaftaran = "SPMB2019-000" + noPos;
+                    noPendaftaran = "SPMB" + tahunAktif + "-000" + noPos;
                 else if (noPos < 10)
-                    noPendaftaran = "SPMB2019-0000" + noPos;
+                    noPendaftaran = "SPMB" + tahunAktif + "-0000" + noPos;
             }
             else
             {
@@ -1043,24 +1044,24 @@ namespace SPMBServices
         {
             string tahun = "";
 
-            koneksi.ConnectionString = con;
-            query = "SELECT tahunaktif FROM Config";
+            SqlConnection tsCon = new SqlConnection (con);
+            string taquery = "SELECT tahunaktif FROM Config";
 
-            cmd = new SqlCommand(query, koneksi);
+            SqlCommand taCmd = new SqlCommand(taquery, tsCon);
 
-            koneksi.Open();
-            reader = cmd.ExecuteReader();
+            tsCon.Open();
+            SqlDataReader taReader = taCmd.ExecuteReader();
             if (reader.HasRows)
             {
                 reader.Read();
-                tahun = reader[0].ToString();
+                tahun = taReader[0].ToString();
             }
             else
             {
                 throw new WebFaultException<string>("Belum ada Tahun", System.Net.HttpStatusCode.NoContent);
             }
 
-            koneksi.Close();
+            tsCon.Close();
 
             return tahun;
         }
