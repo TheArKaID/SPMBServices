@@ -195,12 +195,21 @@ namespace SPMBServices
 
         [OperationContract]
         [WebInvoke(
-            Method = "GET",
+            Method = "POST",
             RequestFormat = WebMessageFormat.Json,
             ResponseFormat = WebMessageFormat.Json,
             UriTemplate = "tambahTahun?tahun={tahun}"
         )]
         string TambahTahun(string tahun);
+
+        [OperationContract]
+        [WebInvoke(
+            Method = "GET",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "cekTahunPendaftaran"
+        )]
+        List<TahunPendaftaran> CekTahunPendaftaran();
     }
 
     [DataContract]
@@ -388,6 +397,15 @@ namespace SPMBServices
         public string Nama { get; set; }
         [DataMember]
         public string Jurusan { get; set; }
+    }
+
+    [DataContract]
+    public class TahunPendaftaran
+    {
+        [DataMember]
+        public string IdTahun { get; set; }
+        [DataMember]
+        public string Tahun { get; set; }
     }
 }
 

@@ -1004,5 +1004,37 @@ namespace SPMBServices
             }
 
         }
+
+        public List<TahunPendaftaran> CekTahunPendaftaran()
+        {
+            List<TahunPendaftaran> tahuns = new List<TahunPendaftaran>();
+
+            koneksi.ConnectionString = con;
+            query = "SELECT * FROM Tahun";
+
+            cmd = new SqlCommand(query, koneksi);
+
+            koneksi.Open();
+            reader = cmd.ExecuteReader();
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    TahunPendaftaran tahun = new TahunPendaftaran();
+                    tahun.IdTahun = reader[0].ToString();
+                    tahun.Tahun = reader[1].ToString();
+
+                    tahuns.Add(tahun);
+                }
+            }
+            else
+            {
+                throw new WebFaultException<string>("Belum ada Tahun", System.Net.HttpStatusCode.NoContent);
+            }
+
+            koneksi.Close();
+
+            return tahuns;
+        }
     }
 }
