@@ -260,6 +260,14 @@ namespace SPMBServices
             Pendaftar dataPendaftar = new Pendaftar();
 
             koneksi.ConnectionString = con;
+            //query = "SELECT * FROM Pendaftar " +
+            //    "JOIN Jurusan AS J1 ON Pendaftar.jurusan1 = J1.id " +
+            //    "JOIN Jurusan AS J2 ON Pendaftar.jurusan2 = J2.id " +
+            //    "JOIN Tahun ON Pendaftar.id_tahun_daftar = Tahun.id " +
+            //    "JOIN [User] ON Pendaftar.id_verificator = [User].[id] " +
+            //    "JOIN StatusPendaftar ON Pendaftar.id_status = StatusPendaftar.id " +
+            //    "WHERE no_pendaftaran = @noPendaftaran";
+
             query = "SELECT * FROM Pendaftar " +
                 "JOIN Jurusan AS J1 ON Pendaftar.jurusan1 = J1.id " +
                 "JOIN Jurusan AS J2 ON Pendaftar.jurusan2 = J2.id " +
@@ -267,7 +275,7 @@ namespace SPMBServices
                 "JOIN [User] ON Pendaftar.id_verificator = [User].[id] " +
                 "JOIN StatusPendaftar ON Pendaftar.id_status = StatusPendaftar.id " +
                 "WHERE no_pendaftaran = @noPendaftaran";
-            
+
             cmd = new SqlCommand(query, koneksi);
             cmd.Parameters.AddWithValue("@noPendaftaran", noPendaftaran);
 
@@ -615,7 +623,8 @@ namespace SPMBServices
             List<Pendaftar> pendaftars = new List<Pendaftar>();
             
             koneksi.ConnectionString = con;
-            query = "SELECT * FROM Pendaftar JOIN StatusPendaftar ON Pendaftar.id_status = StatusPendaftar.id";
+            query = "SELECT * FROM Pendaftar JOIN StatusPendaftar ON Pendaftar.id_status = StatusPendaftar.id " +
+                "WHERE id_tahun_daftar = (SELECT Tahun.id FROM Tahun JOIN Config ON Config.tahunaktif = Tahun.tahun)";
 
             cmd = new SqlCommand(query, koneksi);
 
@@ -1051,9 +1060,9 @@ namespace SPMBServices
 
             tsCon.Open();
             SqlDataReader taReader = taCmd.ExecuteReader();
-            if (reader.HasRows)
+            if (taReader.HasRows)
             {
-                reader.Read();
+                taReader.Read();
                 tahun = taReader[0].ToString();
             }
             else
