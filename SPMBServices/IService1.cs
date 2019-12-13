@@ -380,7 +380,7 @@ namespace SPMBServices
     public class DataInformasi
     {
         DateTime waktuTest1, waktuTest2, waktuTest3, waktuPengumuman, waktuPendaftaranMulai, waktuPendaftaranSelesai;
-        string tahunAktif;
+        string tahunAktif, tambahTahun;
 
         [DataMember]
         public DateTime WaktuTest1 { get => waktuTest1; set => waktuTest1 = value; }
@@ -396,6 +396,8 @@ namespace SPMBServices
         public DateTime WaktuPendaftaranSelesai { get => waktuPendaftaranSelesai; set => waktuPendaftaranSelesai = value; }
         [DataMember]
         public string TahunAktif { get => tahunAktif; set => tahunAktif = value; }
+        [DataMember]
+        public string TambahTahun { get => tambahTahun; set => tambahTahun = value; }
     }
 
     [DataContract]

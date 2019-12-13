@@ -596,7 +596,9 @@ namespace SPMBServices
             try
             {
                 cmd.ExecuteNonQuery();
+                TambahTahun(dataInformasi.TambahTahun);
                 status = "berhasil";
+
             }
             catch (Exception e)
             {
@@ -965,8 +967,8 @@ namespace SPMBServices
 
             string status = "";
             
-            koneksi.ConnectionString = con;
-            query = "INSERT INTO [Tahun]([tahun])" +
+            SqlConnection ttCon = new SqlConnection(con);
+            string ttQuery = "INSERT INTO [Tahun]([tahun])" +
                 "VALUES(@tahun)";
 
             if (cekTahun(tahun)!="benar")
@@ -974,20 +976,20 @@ namespace SPMBServices
                 return cekTahun(tahun);
             }
 
-            cmd = new SqlCommand(query, koneksi);
-            cmd.Parameters.AddWithValue("@tahun", tahun);
+            SqlCommand ttCmd = new SqlCommand(ttQuery, ttCon);
+            ttCmd.Parameters.AddWithValue("@tahun", tahun);
 
-            koneksi.Open();
+            ttCon.Open();
             try
             {
-                cmd.ExecuteNonQuery();
+                ttCmd.ExecuteNonQuery();
                 status = "berhasil";
             }
             catch (Exception e)
             {
                 throw new WebFaultException<string>("Gagal. Silahkan hubungi Administrator.", System.Net.HttpStatusCode.Unused);
             }
-            koneksi.Close();
+            ttCon.Close();
 
             return status;
         }
