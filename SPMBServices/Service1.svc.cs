@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Net;
 using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Web;
@@ -941,7 +942,7 @@ namespace SPMBServices
             koneksi.ConnectionString = con;
             query = "SELECT * FROM Pendaftar " +
                 "JOIN StatusPendaftar ON Pendaftar.id_status = StatusPendaftar.id " +
-                "WHERE Pendaftar.nama LIKE @nam " +
+                "WHERE Pendaftar.nama LIKE @nama " +
                 "AND Pendaftar.id_tahun_daftar = (SELECT Tahun.id FROM Tahun JOIN Config ON Config.tahunaktif = Tahun.tahun)";
 
             cmd = new SqlCommand(query, koneksi);
@@ -968,7 +969,7 @@ namespace SPMBServices
             else
             {
                 //dataPendaftar.Status = "gagal";
-                throw new WebFaultException<string>("Belum ada Pendaftar", System.Net.HttpStatusCode.NoContent);
+                throw new WebFaultException<string>("Belum ada Pendaftar", System.Net.HttpStatusCode.NotFound);
             }
 
             koneksi.Close();
@@ -1000,7 +1001,7 @@ namespace SPMBServices
             }
             catch (Exception e)
             {
-                throw new WebFaultException<string>("Gagal. Silahkan hubungi Administrator.", System.Net.HttpStatusCode.Unused);
+                throw new WebFaultException<string>("Gagal. Silahkan hubungi Administrator.", System.Net.HttpStatusCode.ExpectationFailed);
             }
             ttCon.Close();
 
@@ -1015,7 +1016,7 @@ namespace SPMBServices
             }
             else
             {
-                throw new WebFaultException<string>("Masukkan tahun berupa angka", System.Net.HttpStatusCode.Unused);
+                throw new WebFaultException<string>("Masukkan tahun berupa angka", System.Net.HttpStatusCode.PreconditionFailed);
             }
 
         }
@@ -1244,6 +1245,32 @@ namespace SPMBServices
                 throw new WebFaultException<string>("Gagal. Silahkan hubungi Administrator.", System.Net.HttpStatusCode.Unused);
             }
             ttCon.Close();
+
+            return status;
+        }
+
+        public string PengumumanPendaftar(string noPendaftaran)
+        {
+            string status = "";
+            koneksi.ConnectionString = con;
+            query = "SELECT * FROM PengumumanPendaftar WHERE no_pendaftaran = @noPendaftaran";
+
+            cmd = new SqlCommand(query, koneksi);
+            cmd.Parameters.AddWithValue("@noPendaftaran", noPendaftaran);
+
+            koneksi.Open();
+            reader = cmd.ExecuteReader();
+            if (reader.HasRows)
+            {
+                status = "Lulus";
+            }
+            else
+            {
+                //dataPendaftar.Status = "gagal";
+                throw new WebFaultException<string>("Anda Tidak Lulus", HttpStatusCode.NotFound);
+            }
+
+            koneksi.Close();
 
             return status;
         }

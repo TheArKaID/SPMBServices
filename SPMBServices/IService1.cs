@@ -273,6 +273,15 @@ namespace SPMBServices
             UriTemplate = "hapusFakultas?idFakultas={idFakultas}"
         )]
         string HapusFakultas(string idFakultas);
+
+        [OperationContract]
+        [WebInvoke(
+            Method = "GET",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "cekPengumumanPendaftar?noPendaftaran={noPendaftaran}"
+        )]
+        string PengumumanPendaftar(string noPendaftaran);
     }
 
     [DataContract]
