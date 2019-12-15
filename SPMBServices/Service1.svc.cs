@@ -1169,5 +1169,30 @@ namespace SPMBServices
 
             return dataFakultas;
         }
+
+        public string HapusJurusan(string idJurusan)
+        {
+            string status = "";
+
+            SqlConnection ttCon = new SqlConnection(con);
+            string ttQuery = "DELETE FROM Pendaftar WHERE jurusan1 = @idJurusan OR jurusan2 = @idJurusan; DELETE FROM Jurusan WHERE id = @idJurusan";
+
+            SqlCommand ttCmd = new SqlCommand(ttQuery, ttCon);
+            ttCmd.Parameters.AddWithValue("@idJurusan", idJurusan);
+
+            ttCon.Open();
+            try
+            {
+                ttCmd.ExecuteNonQuery();
+                status = "berhasil";
+            }
+            catch (Exception e)
+            {
+                throw new WebFaultException<string>("Gagal. Silahkan hubungi Administrator.", System.Net.HttpStatusCode.Unused);
+            }
+            ttCon.Close();
+
+            return status;
+        }
     }
 }

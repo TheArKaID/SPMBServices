@@ -246,6 +246,15 @@ namespace SPMBServices
             UriTemplate = "getAllFakultas"
         )]
         List<DetailFakultas> GetAllFakultas();
+
+        [OperationContract]
+        [WebInvoke(
+            Method = "POST",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "hapusJurusan?idJurusan={idJurusan}"
+        )]
+        string HapusJurusan(string idJurusan);
     }
 
     [DataContract]
