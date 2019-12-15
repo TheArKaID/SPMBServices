@@ -1078,21 +1078,17 @@ namespace SPMBServices
             return tahun;
         }
         
-        public string TambahJurusan(string jurusan)
+        public string TambahJurusan(string namaJurusan, string idFakultas)
         {
             string status = "";
 
             SqlConnection ttCon = new SqlConnection(con);
-            string ttQuery = "INSERT INTO [Jurusan]([jurusan])" +
-                "VALUES(@jurusan)";
-
-            if (cekTahun(jurusan) != "benar")
-            {
-                return cekTahun(jurusan);
-            }
+            string ttQuery = "INSERT INTO [Jurusan]([nama], [id_fakultas])" +
+                "VALUES(@nama, @id_fakultas)";
 
             SqlCommand ttCmd = new SqlCommand(ttQuery, ttCon);
-            ttCmd.Parameters.AddWithValue("@jurusan", jurusan);
+            ttCmd.Parameters.AddWithValue("@nama", namaJurusan);
+            ttCmd.Parameters.AddWithValue("@id_fakultas", Convert.ToInt32(idFakultas));
 
             ttCon.Open();
             try
@@ -1140,6 +1136,38 @@ namespace SPMBServices
             koneksi.Close();
 
             return dataJurusan;
+        }
+
+        public List<DetailFakultas> GetAllFakultas()
+        {
+            List<DetailFakultas> dataFakultas = new List<DetailFakultas>();
+
+            koneksi.ConnectionString = con;
+            query = "SELECT * FROM Fakultas";
+
+            cmd = new SqlCommand(query, koneksi);
+
+            koneksi.Open();
+            reader = cmd.ExecuteReader();
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    DetailFakultas fakultas = new DetailFakultas();
+                    fakultas.Id = Convert.ToInt32(reader[0]);
+                    fakultas.Nama = reader[1].ToString();
+
+                    dataFakultas.Add(fakultas);
+                }
+            }
+            else
+            {
+                throw new WebFaultException<string>("Belum ada Fakultas", System.Net.HttpStatusCode.NoContent);
+            }
+
+            koneksi.Close();
+
+            return dataFakultas;
         }
     }
 }

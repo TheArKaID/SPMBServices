@@ -225,9 +225,9 @@ namespace SPMBServices
             Method = "POST",
             RequestFormat = WebMessageFormat.Json,
             ResponseFormat = WebMessageFormat.Json,
-            UriTemplate = "tambahJurusan?jurusan={jurusan}"
+            UriTemplate = "tambahJurusan?namaJurusan={namaJurusan}&idFakultas={idFakultas}"
         )]
-        string TambahJurusan(string jurusan);
+        string TambahJurusan(string namaJurusan, string idFakultas);
         
         [OperationContract]
         [WebInvoke(
@@ -237,6 +237,15 @@ namespace SPMBServices
             UriTemplate = "getAllJurusan"
         )]
         List<DetailJurusan> GetAllJurusan();
+
+        [OperationContract]
+        [WebInvoke(
+            Method = "GET",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "getAllFakultas"
+        )]
+        List<DetailFakultas> GetAllFakultas();
     }
 
     [DataContract]
@@ -445,6 +454,14 @@ namespace SPMBServices
         public int Id { get; set; }
         [DataMember]
         public string NamaFakultas { get; set; }
+    }
+
+    public class DetailFakultas
+    {
+        [DataMember]
+        public string Nama { get; set; }
+        [DataMember]
+        public int Id { get; set; }
     }
 }
 
