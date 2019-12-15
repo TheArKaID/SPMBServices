@@ -255,6 +255,15 @@ namespace SPMBServices
             UriTemplate = "hapusJurusan?idJurusan={idJurusan}"
         )]
         string HapusJurusan(string idJurusan);
+
+        [OperationContract]
+        [WebInvoke(
+            Method = "POST",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "tambahFakultas?namaFakultas={namaFakultas}"
+        )]
+        string TambahFakultas(string namaFakultas);
     }
 
     [DataContract]

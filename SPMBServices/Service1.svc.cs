@@ -1194,5 +1194,31 @@ namespace SPMBServices
 
             return status;
         }
+
+        public string TambahFakultas(string namaFakultas)
+        {
+            string status = "";
+
+            SqlConnection ttCon = new SqlConnection(con);
+            string ttQuery = "INSERT INTO [Fakultas]([nama])" +
+                "VALUES(@nama)";
+
+            SqlCommand ttCmd = new SqlCommand(ttQuery, ttCon);
+            ttCmd.Parameters.AddWithValue("@nama", namaFakultas);
+
+            ttCon.Open();
+            try
+            {
+                ttCmd.ExecuteNonQuery();
+                status = "berhasil";
+            }
+            catch (Exception e)
+            {
+                throw new WebFaultException<string>("Gagal. Silahkan hubungi Administrator.", System.Net.HttpStatusCode.Unused);
+            }
+            ttCon.Close();
+
+            return status;
+        }
     }
 }
