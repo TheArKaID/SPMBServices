@@ -126,9 +126,9 @@ namespace SPMBServices
             Method = "GET",
             RequestFormat = WebMessageFormat.Json,
             ResponseFormat = WebMessageFormat.Json,
-            UriTemplate = "getAllPendaftar"
+            UriTemplate = "getAllPendaftar?mulaiDari={mulaiDari}"
         )]
-        List<Pendaftar> GetAllPendaftar();
+        List<Pendaftar> GetAllPendaftar(int mulaiDari);
 
         [OperationContract]
         [WebInvoke(
@@ -282,6 +282,15 @@ namespace SPMBServices
             UriTemplate = "cekPengumumanPendaftar?noPendaftaran={noPendaftaran}"
         )]
         string PengumumanPendaftar(string noPendaftaran);
+
+        [OperationContract]
+        [WebInvoke(
+            Method = "GET",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "paginationPendaftar?pages={pages}"
+        )]
+        List<string> PaginationPendaftar(int pages);
     }
 
     [DataContract]

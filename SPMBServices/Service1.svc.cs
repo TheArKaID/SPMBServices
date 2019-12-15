@@ -619,15 +619,23 @@ namespace SPMBServices
             return status;
         }
 
-        public List<Pendaftar> GetAllPendaftar()
+        public List<Pendaftar> GetAllPendaftar(int mulaiDari)
         {
             List<Pendaftar> pendaftars = new List<Pendaftar>();
             
             koneksi.ConnectionString = con;
+            //query = "SELECT * FROM (" +
+            //        "SELECT *, ROW_NUMBER() OVER (ORDER BY Pendaftar.no_pendaftaran) as row FROM Pendaftar JOIN StatusPendaftar ON Pendaftar.id_status = StatusPendaftar.id " +
+            //        "WHERE id_tahun_daftar = (SELECT Tahun.id FROM Tahun JOIN Config ON Config.tahunaktif = Tahun.tahun)" +
+            //    ") a WHERE row > @mulaiDari AND row <= @dataPerhalaman";
+
             query = "SELECT * FROM Pendaftar JOIN StatusPendaftar ON Pendaftar.id_status = StatusPendaftar.id " +
-                "WHERE id_tahun_daftar = (SELECT Tahun.id FROM Tahun JOIN Config ON Config.tahunaktif = Tahun.tahun)";
+                "WHERE id_tahun_daftar = (SELECT Tahun.id FROM Tahun JOIN Config ON Config.tahunaktif = Tahun.tahun) ORDER BY no_pendaftaran " +
+                "OFFSET @mulaiDari ROWS FETCH NEXT 5 ROWS ONLY";
 
             cmd = new SqlCommand(query, koneksi);
+            cmd.Parameters.AddWithValue("@mulaiDari", mulaiDari);
+            cmd.Parameters.AddWithValue("@dataPerhalaman", 5);
 
             koneksi.Open();
             reader = cmd.ExecuteReader();
@@ -1273,6 +1281,45 @@ namespace SPMBServices
             koneksi.Close();
 
             return status;
+        }
+
+        public List<string> PaginationPendaftar(int pages)
+        {
+            koneksi.ConnectionString = con;
+
+            string query = "SELECT count(Pendaftar.no_pendaftaran) FROM Pendaftar JOIN StatusPendaftar ON Pendaftar.id_status = StatusPendaftar.id " +
+                "WHERE id_tahun_daftar = (SELECT Tahun.id FROM Tahun JOIN Config ON Config.tahunaktif = Tahun.tahun)";
+
+            cmd = new SqlCommand(query, koneksi);
+            koneksi.Open();
+            reader = cmd.ExecuteReader();
+            int total_data = 0;
+            if (reader.HasRows)
+            {
+                reader.Read();
+                total_data = Convert.ToInt32(reader[0]);
+            }
+            koneksi.Close();
+            
+
+		    double total_halaman = Math.Ceiling(Convert.ToDouble(Convert.ToDouble(total_data) / 5.0));
+		
+		    int batasPosisiNomor = 3;
+		    int batasJumlahHalaman = 5;
+		    int mulaiPagination = 1;
+		    int batasAkhirPagination = Convert.ToInt32(total_halaman);
+		
+		    string url = "admin.php?page=pendaftar&pages=";
+
+            List<string> result = new List<string>();
+            result.Add(url);
+            result.Add(batasAkhirPagination.ToString());
+            result.Add(batasJumlahHalaman.ToString());
+            result.Add(batasPosisiNomor.ToString());
+            result.Add(mulaiPagination.ToString());
+            result.Add(total_halaman.ToString());
+
+            return result;
         }
     }
 }
