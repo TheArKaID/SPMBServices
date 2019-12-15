@@ -425,7 +425,7 @@ namespace SPMBServices
             return dataJurusan;
         }
 
-        public DataJurusan CekJurusan(int idJurusan)
+        public DataJurusan DetailJurusan(int idJurusan)
         {
             DataJurusan jurusan = new DataJurusan();
             koneksi.ConnectionString = con;
@@ -978,7 +978,6 @@ namespace SPMBServices
 
         public string TambahTahun(string tahun)
         {
-
             string status = "";
             
             SqlConnection ttCon = new SqlConnection(con);
@@ -1077,6 +1076,70 @@ namespace SPMBServices
             tsCon.Close();
 
             return tahun;
+        }
+        
+        public string TambahJurusan(string jurusan)
+        {
+            string status = "";
+
+            SqlConnection ttCon = new SqlConnection(con);
+            string ttQuery = "INSERT INTO [Jurusan]([jurusan])" +
+                "VALUES(@jurusan)";
+
+            if (cekTahun(jurusan) != "benar")
+            {
+                return cekTahun(jurusan);
+            }
+
+            SqlCommand ttCmd = new SqlCommand(ttQuery, ttCon);
+            ttCmd.Parameters.AddWithValue("@jurusan", jurusan);
+
+            ttCon.Open();
+            try
+            {
+                ttCmd.ExecuteNonQuery();
+                status = "berhasil";
+            }
+            catch (Exception e)
+            {
+                throw new WebFaultException<string>("Gagal. Silahkan hubungi Administrator.", System.Net.HttpStatusCode.Unused);
+            }
+            ttCon.Close();
+
+            return status;
+        }
+
+        public List<DetailJurusan> GetAllJurusan()
+        {
+            List<DetailJurusan> dataJurusan = new List<DetailJurusan>();
+
+            koneksi.ConnectionString = con;
+            query = "SELECT * FROM Jurusan JOIN Fakultas ON Jurusan.id_fakultas = Fakultas.id";
+
+            cmd = new SqlCommand(query, koneksi);
+
+            koneksi.Open();
+            reader = cmd.ExecuteReader();
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    DetailJurusan jurusan = new DetailJurusan();
+                    jurusan.Id = Convert.ToInt32(reader[0]);
+                    jurusan.Nama = reader[1].ToString();
+                    jurusan.NamaFakultas = reader[4].ToString();
+
+                    dataJurusan.Add(jurusan);
+                }
+            }
+            else
+            {
+                throw new WebFaultException<string>("Belum ada Jurusan", System.Net.HttpStatusCode.NoContent);
+            }
+
+            koneksi.Close();
+
+            return dataJurusan;
         }
     }
 }

@@ -101,7 +101,7 @@ namespace SPMBServices
             ResponseFormat = WebMessageFormat.Json,
             UriTemplate = "dataJurusan?id={idJurusan}"
         )]
-        DataJurusan CekJurusan(int idJurusan);
+        DataJurusan DetailJurusan(int idJurusan);
 
         [OperationContract]
         [WebInvoke(
@@ -211,7 +211,6 @@ namespace SPMBServices
         )]
         List<TahunPendaftaran> CekTahunPendaftaran();
 
-
         [OperationContract]
         [WebInvoke(
             Method = "GET",
@@ -220,6 +219,24 @@ namespace SPMBServices
             UriTemplate = "cekTahunAktif"
         )]
         string CekTahunAktif();
+
+        [OperationContract]
+        [WebInvoke(
+            Method = "POST",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "tambahJurusan?jurusan={jurusan}"
+        )]
+        string TambahJurusan(string jurusan);
+        
+        [OperationContract]
+        [WebInvoke(
+            Method = "GET",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "getAllJurusan"
+        )]
+        List<DetailJurusan> GetAllJurusan();
     }
 
     [DataContract]
@@ -373,7 +390,6 @@ namespace SPMBServices
         public int Id { get => id; set => id = value; }
         [DataMember]
         public int IdFakultas { get => idFakultas; set => idFakultas = value; }
-
     }
 
     [DataContract]
@@ -418,6 +434,17 @@ namespace SPMBServices
         public string IdTahun { get; set; }
         [DataMember]
         public string Tahun { get; set; }
+    }
+
+    [DataContract]
+    public class DetailJurusan
+    {
+        [DataMember]
+        public string Nama { get; set; }
+        [DataMember]
+        public int Id { get; set; }
+        [DataMember]
+        public string NamaFakultas { get; set; }
     }
 }
 
