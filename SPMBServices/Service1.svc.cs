@@ -624,10 +624,6 @@ namespace SPMBServices
             List<Pendaftar> pendaftars = new List<Pendaftar>();
             
             koneksi.ConnectionString = con;
-            //query = "SELECT * FROM (" +
-            //        "SELECT *, ROW_NUMBER() OVER (ORDER BY Pendaftar.no_pendaftaran) as row FROM Pendaftar JOIN StatusPendaftar ON Pendaftar.id_status = StatusPendaftar.id " +
-            //        "WHERE id_tahun_daftar = (SELECT Tahun.id FROM Tahun JOIN Config ON Config.tahunaktif = Tahun.tahun)" +
-            //    ") a WHERE row > @mulaiDari AND row <= @dataPerhalaman";
 
             query = "SELECT * FROM Pendaftar JOIN StatusPendaftar ON Pendaftar.id_status = StatusPendaftar.id " +
                 "WHERE id_tahun_daftar = (SELECT Tahun.id FROM Tahun JOIN Config ON Config.tahunaktif = Tahun.tahun) ORDER BY no_pendaftaran " +
@@ -861,16 +857,19 @@ namespace SPMBServices
             koneksiUSP.Close();
         }
 
-        public List<Pendaftar> CekPengumumanPendaftar()
+        public List<Pendaftar> pengumumanPendaftar(int mulaiDari)
         {
             List<Pendaftar> pendaftars = new List<Pendaftar>();
 
             koneksi.ConnectionString = con;
             query = "SELECT * FROM PengumumanPendaftar " +
                 "JOIN Pendaftar ON PengumumanPendaftar.no_pendaftaran = Pendaftar.no_pendaftaran " +
-                "WHERE Pendaftar.id_tahun_daftar = (SELECT Tahun.id FROM Tahun JOIN Config ON Config.tahunaktif = Tahun.tahun)";
+                "WHERE Pendaftar.id_tahun_daftar = (SELECT Tahun.id FROM Tahun JOIN Config ON Config.tahunaktif = Tahun.tahun) ORDER BY PengumumanPendaftar.no_pendaftaran " +
+                "OFFSET @mulaiDari ROWS FETCH NEXT 5 ROWS ONLY";
 
             cmd = new SqlCommand(query, koneksi);
+            cmd.Parameters.AddWithValue("@mulaiDari", mulaiDari);
+            cmd.Parameters.AddWithValue("@dataPerhalaman", 5);
 
             koneksi.Open();
             reader = cmd.ExecuteReader();
@@ -934,7 +933,7 @@ namespace SPMBServices
             else
             {
                 //dataPendaftar.Status = "gagal";
-                throw new WebFaultException<string>("Belum ada Pendaftar", System.Net.HttpStatusCode.NoContent);
+                throw new WebFaultException<string>("Data tidak ditemukan", System.Net.HttpStatusCode.NotFound);
             }
 
             koneksi.Close();
@@ -1283,12 +1282,25 @@ namespace SPMBServices
             return status;
         }
 
-        public List<string> PaginationPendaftar(int pages)
+        public List<string> Pagination(string whichOne, int pages)
         {
             koneksi.ConnectionString = con;
+            string query = "";
+            string url = "";
 
-            string query = "SELECT count(Pendaftar.no_pendaftaran) FROM Pendaftar JOIN StatusPendaftar ON Pendaftar.id_status = StatusPendaftar.id " +
+            if (whichOne.Equals("pendaftar"))
+            {
+                query = "SELECT count(Pendaftar.no_pendaftaran) FROM Pendaftar JOIN StatusPendaftar ON Pendaftar.id_status = StatusPendaftar.id " +
                 "WHERE id_tahun_daftar = (SELECT Tahun.id FROM Tahun JOIN Config ON Config.tahunaktif = Tahun.tahun)";
+                url = "admin.php?page=pendaftar&pages=";
+            } else if (whichOne.Equals("pengumuman"))
+            {
+                query = "SELECT count(PengumumanPendaftar.no_pendaftaran) FROM PengumumanPendaftar " +
+                "JOIN Pendaftar ON PengumumanPendaftar.no_pendaftaran = Pendaftar.no_pendaftaran " +
+                "WHERE Pendaftar.id_tahun_daftar = (SELECT Tahun.id FROM Tahun JOIN Config ON Config.tahunaktif = Tahun.tahun)";
+                url = "admin.php?page=hasil-pengumuman&pages=";
+            }
+             
 
             cmd = new SqlCommand(query, koneksi);
             koneksi.Open();
@@ -1308,8 +1320,7 @@ namespace SPMBServices
 		    int batasJumlahHalaman = 5;
 		    int mulaiPagination = 1;
 		    int batasAkhirPagination = Convert.ToInt32(total_halaman);
-		
-		    string url = "admin.php?page=pendaftar&pages=";
+            
 
             List<string> result = new List<string>();
             result.Add(url);
