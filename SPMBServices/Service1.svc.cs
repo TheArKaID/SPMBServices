@@ -74,10 +74,10 @@ namespace SPMBServices
 
             koneksi.Open();
             reader = cmd.ExecuteReader();
+            string tahunAktif = CekTahunAktif();
 
             if (reader.Read())
             {
-                string tahunAktif = CekTahunAktif();
                 current = reader.GetString(0);
                 editable = current.Substring(9, 5);
                 noPos = Int32.Parse(editable);
@@ -95,7 +95,7 @@ namespace SPMBServices
             }
             else
             {
-                noPendaftaran = "SPMB2019-00001";
+                noPendaftaran = "SPMB" + tahunAktif + "-00001";
             }
             koneksi.Close();
             return noPendaftaran;
