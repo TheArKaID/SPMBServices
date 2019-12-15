@@ -705,7 +705,8 @@ namespace SPMBServices
                 "JOIN Jurusan AS J2 ON Pendaftar.jurusan2 = J2.id " +
                 "JOIN Tahun ON Pendaftar.id_tahun_daftar = Tahun.id " +
                 "JOIN [User] ON Pendaftar.id_verificator = [User].[id] " +
-                "JOIN StatusPendaftar ON Pendaftar.id_status = StatusPendaftar.id";
+                "JOIN StatusPendaftar ON Pendaftar.id_status = StatusPendaftar.id " +
+                "WHERE Pendaftar.id_tahun_daftar = (SELECT Tahun.id FROM Tahun JOIN Config ON Config.tahunaktif = Tahun.tahun)";
 
             cmd = new SqlCommand(query, koneksi);
 
@@ -898,7 +899,8 @@ namespace SPMBServices
             koneksi.ConnectionString = con;
             query = "SELECT * FROM PengumumanPendaftar " +
                 "JOIN Pendaftar ON PengumumanPendaftar.no_pendaftaran = Pendaftar.no_pendaftaran " +
-                "WHERE PengumumanPendaftar.nama LIKE @nama";
+                "WHERE PengumumanPendaftar.nama LIKE @nama " +
+                "AND Pendaftar.id_tahun_daftar = (SELECT Tahun.id FROM Tahun JOIN Config ON Config.tahunaktif = Tahun.tahun)";
 
             cmd = new SqlCommand(query, koneksi);
             cmd.Parameters.AddWithValue("@nama", '%' + search + '%');
@@ -939,7 +941,8 @@ namespace SPMBServices
             koneksi.ConnectionString = con;
             query = "SELECT * FROM Pendaftar " +
                 "JOIN StatusPendaftar ON Pendaftar.id_status = StatusPendaftar.id " +
-                "WHERE Pendaftar.nama LIKE @nama";
+                "WHERE Pendaftar.nama LIKE @nam " +
+                "AND Pendaftar.id_tahun_daftar = (SELECT Tahun.id FROM Tahun JOIN Config ON Config.tahunaktif = Tahun.tahun)";
 
             cmd = new SqlCommand(query, koneksi);
             cmd.Parameters.AddWithValue("@nama", '%' + search + '%');
