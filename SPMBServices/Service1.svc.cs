@@ -104,20 +104,7 @@ namespace SPMBServices
         private string cekDaftar(string username, string password, string repassword, string email, string nohp, string agreement)
         {
             string status = "";
-            koneksi.ConnectionString = con;
-            query = "SELECT username FROM Pendaftar WHERE username = @username";
-            cmd = new SqlCommand(query, koneksi);
-            cmd.Parameters.AddWithValue("@username", username);
-
-            koneksi.Open();
-            reader = cmd.ExecuteReader();
-            if (reader.HasRows)
-            {
-                koneksi.Close();
-                status = " |Username telah digunakan| ";
-            }
-            koneksi.Close();
-
+            
             if (username.Length < 6)
                 status += " |Username minimal 6 huruf| ";
             if (password.Length < 8)
@@ -130,7 +117,45 @@ namespace SPMBServices
                 status += " |No Hp harus diisi angka| ";
             if (!agreement.Equals("setuju"))
                 status += " |Anda Harus menyetuji persetujuan yang ada| ";
-            if(status=="")
+            if (!status.Equals(""))
+                return status;
+
+            koneksi.ConnectionString = con;
+            query = "SELECT username FROM Pendaftar WHERE username = @username";
+            cmd = new SqlCommand(query, koneksi);
+            cmd.Parameters.AddWithValue("@username", username);
+
+            koneksi.Open();
+            reader = cmd.ExecuteReader();
+            if (reader.HasRows)
+            {
+                status += " |Username telah digunakan| ";
+            }
+            reader.Close();
+
+            query = "SELECT nohp FROM Pendaftar WHERE nohp = @nohp";
+            cmd = new SqlCommand(query, koneksi);
+            cmd.Parameters.AddWithValue("@nohp", nohp);
+            reader = cmd.ExecuteReader();
+            if (reader.HasRows)
+            {
+                status += " |No HP telah digunakan| ";
+            }
+            reader.Close();
+
+            query = "SELECT email FROM Pendaftar WHERE email = @email";
+            cmd = new SqlCommand(query, koneksi);
+            cmd.Parameters.AddWithValue("@email", email);
+            reader = cmd.ExecuteReader();
+            if (reader.HasRows)
+            {
+                status += " |Email telah digunakan| ";
+            }
+            reader.Close();
+
+            koneksi.Close();
+
+            if (status == "")
                 status = "berhasil";
 
             return status;
